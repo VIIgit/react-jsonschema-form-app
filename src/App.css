@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+ /*text-align: center;*/
 }
 
 .App-logo {
@@ -30,3 +30,59 @@
     transform: rotate(360deg);
   }
 }
+
+
+
+.CodeMirror {
+  min-height: 400px;
+}
+
+.widget {
+  border: black solid 1px;
+}
+
+.unicode_ok::before { 
+  content: '✓';
+}
+.unicode_nok::before { 
+  content: '✗';
+}
+
+.unicode_nok { 
+  color: red;
+  
+}
+.unicode_ok { 
+  color: green;
+}
+/** float container */
+/**
+.float-container {
+  border: solid 1px #ccc;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  padding: 0 8px;
+  position: relative;
+  width: 300px;
+}
+.float-container input {
+  border: none;
+  font-size: 16px;
+  outline: 0;
+  padding: 16px 0 10px;
+  width: 100%;
+}
+.float-container label {
+  font-size: 16px;
+  position: absolute;
+  -webkit-transform-origin: top left;
+          transform-origin: top left;
+  -webkit-transform: translate(0, 16px) scale(1);
+          transform: translate(0, 16px) scale(1);
+  transition: all .1s ease-in-out;
+}
+.float-container.active label {
+  -webkit-transform: translate(0, 2px) scale(0.65);
+          transform: translate(0, 2px) scale(0.65);
+}
+*/
