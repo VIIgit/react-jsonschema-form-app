@@ -13,7 +13,7 @@ class AlertMessage extends React.Component {
         description: props.description
       };
     }
-
+    
     shouldComponentUpdate(nextProps) {
       const differentShow = this.props.show !== nextProps.show;
       const differentTitle = this.props.title !== nextProps.title;
@@ -21,7 +21,7 @@ class AlertMessage extends React.Component {
       
       const update = differentShow || differentTitle || differentDescription;
       
-      console.log( update + '\nP--' + JSON.stringify(this.props) + '\nState---' + JSON.stringify(this.state) );
+      console.log('Update: ' + update + '\nFrom: ' + JSON.stringify(this.props) + '\nTo: ' + JSON.stringify(this.state) );
       return update;
     }
 

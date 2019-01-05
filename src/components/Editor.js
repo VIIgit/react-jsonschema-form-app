@@ -12,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
 const cmOptions = {
-    
     mode: 'javascript',
     lineNumbers: true,
     readOnly: false,
@@ -20,10 +19,8 @@ const cmOptions = {
     autofocus: true,
     matchBrackets: true,
     styleActiveLine: true,
-    tabSize: 5
+    tabSize: 2
   };
-
-
 
   const XcmOptions = {
     height: "auto",
@@ -50,55 +47,63 @@ class Editor extends Component {
     }
   
     componentWillReceiveProps(props) {
-      this.setState({ valid: true, code: props.code });
+      //this.setState({ valid: true, code: props.code });
     }
   
     shouldComponentUpdate(nextProps, nextState) {
       return shouldRender(this, nextProps, nextState);
     }
-  
+
+    toValidJsonObject(code){
+      return fromJson(code);
+    }
+
+    validateJsonObject(jsonObj){
+      return ajv.validate(this.props.validationSchema, jsonObj);
+    }
+
     onCodeChange = (editor, metadata, code) => {
-      this.setState({ valid: true, 
-        //code, 
+      
+      this.setState({ valid: true,
         errorTitle: undefined,
         errorDescription: undefined });
+      
       setImmediate(() => {
         try {
- 
-            // check valid json
-            var jsonObj = fromJson(code);
-            //ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-07.json'));
-            var valid = ajv.validate(this.props.validationSchema, jsonObj);
+            var jsonObj = this.toValidJsonObject(code);
+            var valid = this.validateJsonObject(jsonObj);
             if (!valid) {
-                this.setState({ 
-                    valid: false, 
-                    //code, 
-                    errorTitle: 'Invalid Json Schema',
-                    errorDescription: ajv.errorsText()
-                    });
+              
+              this.setState({ 
+                  valid: false, 
+                  errorTitle: 'Invalid Json Schema',
+                  errorDescription: ajv.errorsText()
+                  });
+                    
             } else {
                this.props.onChange(jsonObj);
             }
         } catch (err) {
             if (err instanceof SyntaxError) {
-                this.setState({ 
-                    valid: false, 
-                    //code, 
-                    errorTitle: 'Invalid Json ',
-                    errorDescription: err.message
-                    });
+              this.setState({ 
+                  valid: false, 
+                  errorTitle: 'Invalid Json ',
+                  errorDescription: err.message
+                  });
+                    
             } else {
-                this.setState({ valid: false,
-                    errorTitle: 'Error',
-                    // code 
-                    });
+              
+              this.setState({ valid: false,
+                  errorTitle: 'Error'
+                });
+                    
             }
         }
       });
     };
   
     render() {
-      const { title } = this.props;
+      const { title, children } = this.props;
       const icon = this.state.valid ? "ok" : "nok";
       const cls = this.state.valid ? "valid" : "invalid";
 
@@ -108,6 +113,11 @@ class Editor extends Component {
             <span className={`${cls} rounded-circle unicode_${icon}`} />
             {" " + title}
           </div>
+
+          {children ? (
+            children
+          ) : ''}
+
           <CodeMirror
             value={this.state.code}
             onChange={this.onCodeChange}

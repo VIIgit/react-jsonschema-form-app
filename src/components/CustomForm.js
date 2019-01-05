@@ -21,7 +21,7 @@ const CustomTitleField = ({title, required}) => {
 function ErrorListTemplate(props) {
   const {errors} = props;
   return (
-    <ul>
+    <div>
       {errors.map((error, i) => {
         return (
           <li key={i}>
@@ -29,7 +29,7 @@ function ErrorListTemplate(props) {
           </li>
         );
       })}
-    </ul>
+    </div>
   );
 }
 
@@ -66,7 +66,6 @@ export function CustomObjectFieldTemplate({ TitleField, properties, title, descr
 }
 
 function transformErrors(errors) {
-  console.log('ERRRRR');
   return errors.map(error => {
     if (error.name === "pattern") {
       error.message = "Only digits are allowed"
@@ -84,8 +83,7 @@ const CustomCheckbox = function(props) {
 };
 
 const customWidgets = {
-  //TextWidget: CustomCheckbox
-  date: CustomCheckbox
+  //markdown: CustomCheckbox
 };
 
 function CustomForm(props) {
@@ -93,9 +91,9 @@ function CustomForm(props) {
   return <Form 
     {...props} 
     fields={customFields} 
-    //widgets={customWidgets}
-    //ObjectFieldTemplate={CustomObjectFieldTemplate}
-    FieldTemplate={CustomFieldTemplate} 
+    widgets={customWidgets}
+    //  ObjectFieldTemplate={CustomObjectFieldTemplate}
+    //  FieldTemplate={CustomFieldTemplate} 
     ErrorList={ErrorListTemplate}
     transformErrors={transformErrors}
   >
