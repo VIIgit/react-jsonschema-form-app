@@ -38,7 +38,6 @@
 }
 
 .widget {
-  border: black solid 1px;
 }
 
 .unicode_ok::before { 
@@ -54,6 +53,18 @@
 }
 .unicode_ok { 
   color: green;
+}
+
+.panel-heading {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 2px 10px;
+}
+
+.panel {
+  -webkit-box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.16);
+  -moz-box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.16);
+  box-shadow: 0px 1px 5px 3px rgba(0,0,0,0.16);
+  margin-bottom: 15px;
 }
 /** float container */
 /**

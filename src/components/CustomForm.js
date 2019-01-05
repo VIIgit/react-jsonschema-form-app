@@ -21,7 +21,7 @@ const CustomTitleField = ({title, required}) => {
 function ErrorListTemplate(props) {
   const {errors} = props;
   return (
-    <div>
+    <ul>
       {errors.map((error, i) => {
         return (
           <li key={i}>
@@ -29,7 +29,7 @@ function ErrorListTemplate(props) {
           </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
 
@@ -37,13 +37,13 @@ export function CustomFieldTemplate(props) {
   const {id, classNames, label, help, required, description, errors, children} = props;
   
   return (
-    <p className='{classNames} float-container '>
+    <div className='{classNames} float-container '>
       <label htmlFor={id}>{label}{required ? "*" : null}</label>
       {children}
       {description}
       {errors}
       {help}
-    </p>
+    </div>
   );
 }
 
@@ -89,6 +89,7 @@ const customWidgets = {
 };
 
 function CustomForm(props) {
+  const { title, children } = props;
   return <Form 
     {...props} 
     fields={customFields} 
@@ -97,7 +98,11 @@ function CustomForm(props) {
     FieldTemplate={CustomFieldTemplate} 
     ErrorList={ErrorListTemplate}
     transformErrors={transformErrors}
-  />;
+  >
+  {children ? (
+      children
+    ) : <span></span>}
+  </Form>;
 }
 
 export default CustomForm;

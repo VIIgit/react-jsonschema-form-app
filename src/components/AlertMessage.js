@@ -15,7 +15,6 @@ class AlertMessage extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-      console.log('YESSS' + JSON.stringify(nextProps)   );
       const differentShow = this.props.show !== nextProps.show;
       const differentTitle = this.props.title !== nextProps.title;
       const differentDescription = this.props.description !== nextProps.description;
