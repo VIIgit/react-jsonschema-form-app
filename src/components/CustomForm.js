@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from "react-jsonschema-form";
 import CustomStringField from './fields/CustomStringField';
+import { setState } from 'react-jsonschema-form/lib/utils';
 //import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
 
 const CustomDescriptionField = ({id, description}) => {
@@ -9,8 +10,8 @@ const CustomDescriptionField = ({id, description}) => {
 
 const customFields = {
   //TitleField: CustomTitleField,
-  DescriptionField: CustomDescriptionField,
-  StringField: CustomStringField
+  //DescriptionField: CustomDescriptionField,
+  //StringField: CustomStringField
 };
 
 const CustomTitleField = ({title, required}) => {
@@ -82,25 +83,48 @@ const CustomCheckbox = function(props) {
   );
 };
 
+const MarkdownWidget = function(props) {
+  return (
+    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
+    	{props.value}
+    </button>
+  );
+};
+
 const customWidgets = {
-  //markdown: CustomCheckbox
+  markdown: MarkdownWidget
 };
 
 function CustomForm(props) {
-  const { title, children } = props;
-  return <Form 
-    {...props} 
-    fields={customFields} 
-    widgets={customWidgets}
-    //  ObjectFieldTemplate={CustomObjectFieldTemplate}
-    //  FieldTemplate={CustomFieldTemplate} 
-    ErrorList={ErrorListTemplate}
-    transformErrors={transformErrors}
-  >
-  {children ? (
-      children
-    ) : <span></span>}
-  </Form>;
+  const { title, children, liveSettings } = props;
+
+  const icon = props.valid ? "ok" : "nok";
+  const cls = props.valid ? "valid" : "invalid";
+
+  return <div className="panel panel-default">        
+      <div className={`${cls} panel-heading`}>
+        <span className={`rounded-circle unicode_${icon}`} />
+        {" " + title}
+      </div>
+      <div className="widget" style= {{"padding": "10px"}}>
+        <Form 
+          {...props} 
+          fields={customFields} 
+          widgets={customWidgets}
+          //  ObjectFieldTemplate={CustomObjectFieldTemplate}
+          //FieldTemplate={CustomFieldTemplate} 
+          ErrorList={ErrorListTemplate}
+          showErrorList={false}
+          liveValidate={liveSettings.validate}
+          disabled={liveSettings.disable}
+          transformErrors={(errors)=> transformErrors(errors)}
+        >
+        {children ? (
+            children
+          ) : <span></span>}
+        </Form>
+      </div>
+    </div>;
 }
 
 export default CustomForm;

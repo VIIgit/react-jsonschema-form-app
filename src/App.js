@@ -15,7 +15,6 @@ import './App.css';
 import sampleSimple from './sample/simple';
 
 
-
 require('codemirror/mode/javascript/javascript');
 require('bootstrap') ;
 require('util');
@@ -23,11 +22,8 @@ require('util');
 const draft07Schema = require('ajv/lib/refs/json-schema-draft-07.json');
 const log = (type) => console.log.bind(console, type);
 
-
-
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
-
 
 class App extends Component {
 
@@ -39,57 +35,38 @@ class App extends Component {
     this.state = {
       schema: schema,
       formData : formData,
+      valid: true,
       validate: true,
       liveSettings: {
         validate: true,
         disable: false,
       }
     };
-
-    this.formEditor = React.createRef();
-    this.jsonSchemaEditor = React.createRef();
-    this.updateFormEditor = this.updateFormEditor.bind(this);
-    this.updateJsonSchemaEditor= this.updateJsonSchemaEditor.bind(this);
-    //this.setState({ liveSettings });
-    //FloatLabel.init();
   }
   
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
 
-  updateFormEditor (value) {
-    try {
-      //for (var prop in this.state.schema) { if (this.state.schema.hasOwnProperty(prop)) { delete this.state.schema[prop]; } };
-      //this.setState({ schema : JSON.parse(value)});
-      //FloatLabel.init();
-    } catch (err) {
-      log('nok');
-    }
-  }
-
-  updateJsonSchemaEditor () {
-    var doc = this.updateForm.current;
-    try {
-      
-    } catch (err) {
-    }
-  }
-
   onSchemaEdited = schema => {
-    //this.setState({ schema: schema, shareURL: null });
-    //this.updateFormEditor(JSON.stringify (schema));
+    this.setState({ 
+      schema: schema, 
+      
+      shareURL: null
+     });
     console.log('form changed: ' + JSON.stringify (schema));
   };
   
   onFormDataEdited = value => {
-    //this.setState({ formData: formModel.formData });
+    this.setState({ formData: value });
     console.log('formData changedx: ' +   JSON.stringify (value) );
   };
 
   onUIFormEdited = formModel => {
-   this.setState({ formData: formModel.formData });
-   console.log('UI form  changedx: ' +   JSON.stringify (formModel.formData) );
+   this.setState({ 
+     formData: formModel.formData,
+     valid: (formModel.errors.length === 0)
+    });
   };
 
   render() {
@@ -99,9 +76,8 @@ class App extends Component {
       formData,
       liveSettings,
       validate,
-      editor
+      valid
     } = this.state;
-
 
     return (
       <div className="App">
@@ -114,14 +90,12 @@ class App extends Component {
               <div className="container"> 
                 <div className="row">
                   <div className="col-md">
-
                     <Editor
                       title="JSONSchema"
                       validationSchema={draft07Schema}
                       code={toJson(schema)}
                       onChange={this.onSchemaEdited}
                     />
-                  
                   </div>
                 </div>
 
@@ -131,7 +105,6 @@ class App extends Component {
                       title="Form Data"
                       validationSchema={schema}
                       code={toJson(formData)}
-                      onChange={this.onFormDataEdited}
                     />            
                   </div>
                 </div>
@@ -140,27 +113,19 @@ class App extends Component {
             </div>
             
             <div className="col-md">
-
-              <div className="panel panel-default">
-                <div className="panel-heading">
-                    Form
-                </div>
-                <div className="widget" style= {{"padding": "10px"}}>
-                  <CustomForm 
-                    schema={schema}
-                    //ref={this.formEditor} 
-                    formData={formData}
-                    liveSettings = {liveSettings}
-                    //validate = {validate}
-                    onChange={(e) =>  this.onUIFormEdited(e)}
-                    onError={
-                      (errors) => {log("I have" + errors.length + "errors to fix");
-                    }
-                    }
-                    >
-                  </CustomForm>                 
-                </div>
-              </div>
+              <CustomForm 
+                title="Form"
+                schema={schema}
+                //ref={this.formEditor} 
+                formData={formData}
+                liveSettings = {liveSettings}
+                //validate = {validate}
+                onChange={(e) =>  this.onUIFormEdited(e)}
+                showErrorList={true}
+                valid={valid}
+                >
+              </CustomForm>                 
+            
             </div>
           </div>
         
@@ -168,6 +133,6 @@ class App extends Component {
       </div>
     );
   }
-}
+};
 
 export default App;

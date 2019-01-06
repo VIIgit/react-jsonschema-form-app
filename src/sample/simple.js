@@ -25,10 +25,19 @@ module.exports = {
           type: "string",
           title: "Bio",
         },
-        memberSince: {
+        gender: {
+          type: "string",
+          enum: [
+            "female",
+            "male"
+          ],
+          default: "male",
+          title: "Gender",
+        },
+        startMembership: {
           type: "string",
           format: "date",
-          title: "Member since",
+          title: "Start Membership at",
         },
         telephone: {
           type: "string",
@@ -40,34 +49,12 @@ module.exports = {
     uiSchema: {
       firstName: {
         "ui:autofocus": true,
-        "ui:emptyValue": "",
-      },
-      age: {
-        "ui:widget": "updown",
-        "ui:title": "Age of person",
-        "ui:description": "(earthian year)",
-      },
-      bio: {
-        "ui:widget": "textarea",
-      },
-      password: {
-        "ui:widget": "password",
-        "ui:help": "Hint: Make it strong!",
-      },
-      date: {
-        "ui:widget": "alt-datetime",
-      },
-      telephone: {
-        "ui:options": {
-          inputType: "tel",
-        },
-      },
+        "ui:emptyValue": "please enter a name",
+      }
     },
     formData: {
       lastName: "Norris",
-      age: 75,
-      bio: "Roundhouse kicking asses since 1940",
-      password: "noneed",
+      age: 75
     },
   };
   

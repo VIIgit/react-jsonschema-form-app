@@ -12,42 +12,39 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'codemirror/lib/codemirror.css';
 
 const cmOptions = {
-    mode: 'javascript',
-    lineNumbers: true,
-    readOnly: false,
-    autoRefresh: true,
-    autofocus: true,
-    matchBrackets: true,
-    styleActiveLine: true,
-    tabSize: 2
-  };
-
-  const XcmOptions = {
-    height: "auto",
-    viewportMargin: Infinity,
     mode: {
       name: 'javascript',
       json: true,
       statementIndent: 2,
     },
+    height: 'auto',
     lineNumbers: true,
     lineWrapping: true,
+    readOnly: false,
+    autoRefresh: true,
+    autofocus: false,
+    matchBrackets: true,
+    viewportMargin: Infinity,
+    styleActiveLine: true,
     indentWithTabs: false,
-    tabSize: 2,
+    tabSize: 2
   };
 
 const fromJson = json => JSON.parse(json);
-const toJson = val => JSON.stringify(val, null, 2);
 const ajv = new Ajv({schemaId: 'auto'}); // options can be passed, e.g. {allErrors: true}
 
 class Editor extends Component {
     constructor(props) {
       super(props);
-      this.state = { valid: true, code: props.code, validationSchema: props.validationSchema };
+      this.state = { 
+        valid: undefined, 
+        code: props.code, 
+        validationSchema: props.validationSchema
+      };
     }
   
     componentWillReceiveProps(props) {
-      //this.setState({ valid: true, code: props.code });
+      this.setState({ valid: true, code: props.code });
     }
   
     shouldComponentUpdate(nextProps, nextState) {
@@ -64,6 +61,8 @@ class Editor extends Component {
 
     onCodeChange = (editor, metadata, code) => {
       
+      const { onChange } = this.props;
+
       this.setState({ valid: true,
         errorTitle: undefined,
         errorDescription: undefined });
@@ -78,11 +77,11 @@ class Editor extends Component {
                   valid: false, 
                   errorTitle: 'Invalid Json Schema',
                   errorDescription: ajv.errorsText()
-                  });
+                });
                     
-            } else {
-               this.props.onChange(jsonObj);
-            }
+            } else if (onChange) {
+              onChange(jsonObj);
+            } 
         } catch (err) {
             if (err instanceof SyntaxError) {
               this.setState({ 
@@ -92,42 +91,48 @@ class Editor extends Component {
                   });
                     
             } else {
-              
               this.setState({ valid: false,
-                  errorTitle: 'Error'
+                  errorTitle: 'Error',
+                  errorDescription: err.message
                 });
-                    
             }
         }
       });
     };
   
     render() {
-      const { title, children } = this.props;
+      const { title } = this.props;
       const icon = this.state.valid ? "ok" : "nok";
       const cls = this.state.valid ? "valid" : "invalid";
 
+      const {
+        code,
+        valid,
+        errorTitle,
+        errorDescription,
+      } = this.state;
+
       return (
         <div className="panel panel-default">
-          <div className="panel-heading">
-            <span className={`${cls} rounded-circle unicode_${icon}`} />
-            {" " + title}
+
+          <div className={`${cls} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+            <div >
+              <span className={`rounded-circle unicode_${icon}`} />
+                {" " + title}
+            </div>
+            
           </div>
 
-          {children ? (
-            children
-          ) : ''}
-
           <CodeMirror
-            value={this.state.code}
+            value={code}
             onChange={this.onCodeChange}
             autoCursor={false}
             options={Object.assign({}, cmOptions)}
           />
           <AlertMessage 
-            show={!this.state.valid} 
-            title={this.state.errorTitle} 
-            description={this.state.errorDescription}
+            show={!valid} 
+            title={errorTitle} 
+            description={errorDescription}
           />
         </div>
       );
