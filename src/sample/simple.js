@@ -23,6 +23,7 @@ module.exports = {
         },
         bio: {
           type: "string",
+          format: "markdown",
           title: "Bio",
         },
         gender: {
@@ -54,7 +55,9 @@ module.exports = {
     },
     formData: {
       lastName: "Norris",
-      age: 75
-    },
+      age: 75,
+      bio: "# My Bio \n\n**Lorem** _ipsum_..."
+    }
+
   };
   

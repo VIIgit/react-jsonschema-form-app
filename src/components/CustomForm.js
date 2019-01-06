@@ -1,8 +1,13 @@
 import React from 'react';
 import Form from "react-jsonschema-form";
+import BaseInput from 'react-jsonschema-form/lib/components/widgets/BaseInput';
 import CustomStringField from './fields/CustomStringField';
 import { setState } from 'react-jsonschema-form/lib/utils';
+
+import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
+import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'
 //import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
+const ReactMarkdown = require('react-markdown')
 
 const CustomDescriptionField = ({id, description}) => {
   return <div id={id}>{description}</div>;
@@ -77,7 +82,7 @@ function transformErrors(errors) {
 
 const CustomCheckbox = function(props) {
   return (
-    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
+    <button id={props.id} className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
     	{props.value}
     </button>
   );
@@ -85,9 +90,16 @@ const CustomCheckbox = function(props) {
 
 const MarkdownWidget = function(props) {
   return (
-    <button id="custom" className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
-    	{props.value}
-    </button>
+    <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+      <Tab eventKey={1} title="Edit">
+        <TextWidget  {...props} />
+      </Tab>
+      <Tab eventKey={2} title="Preview">
+        <div className="form-control-markdown">
+          <ReactMarkdown id={props.id} source={props.value} />
+        </div>
+      </Tab>
+    </Tabs>
   );
 };
 

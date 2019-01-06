@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Form from 'react-jsonschema-form';
 import CustomForm from './components/CustomForm';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
@@ -13,7 +11,6 @@ import 'codemirror/theme/material.css';
 import './App.css';
 
 import sampleSimple from './sample/simple';
-
 
 require('codemirror/mode/javascript/javascript');
 require('bootstrap') ;
@@ -30,7 +27,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const { schema, formData, validate } = sampleSimple;
+    const { schema, formData } = sampleSimple;
 
     this.state = {
       schema: schema,
@@ -51,10 +48,9 @@ class App extends Component {
   onSchemaEdited = schema => {
     this.setState({ 
       schema: schema, 
-      
       shareURL: null
      });
-    console.log('form changed: ' + JSON.stringify (schema));
+    log('form changed: ' + JSON.stringify (schema));
   };
   
   onFormDataEdited = value => {
@@ -70,12 +66,10 @@ class App extends Component {
   };
 
   render() {
-
     const {
       schema,
       formData,
       liveSettings,
-      validate,
       valid
     } = this.state;
 
@@ -86,7 +80,6 @@ class App extends Component {
           <div className="row">
 
             <div className="col-md">
-
               <div className="container"> 
                 <div className="row">
                   <div className="col-md">
@@ -108,7 +101,6 @@ class App extends Component {
                     />            
                   </div>
                 </div>
-
               </div>
             </div>
             
@@ -116,10 +108,8 @@ class App extends Component {
               <CustomForm 
                 title="Form"
                 schema={schema}
-                //ref={this.formEditor} 
                 formData={formData}
                 liveSettings = {liveSettings}
-                //validate = {validate}
                 onChange={(e) =>  this.onUIFormEdited(e)}
                 showErrorList={true}
                 valid={valid}
@@ -128,7 +118,6 @@ class App extends Component {
             
             </div>
           </div>
-        
         </div>
       </div>
     );
