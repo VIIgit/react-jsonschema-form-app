@@ -10,6 +10,8 @@ import Editor from './components/Editor';
 import 'codemirror/theme/material.css';
 import './App.css';
 
+import CopyLink from './components/CopyLink'
+
 import sampleSimple from './sample/simple';
 
 require('codemirror/mode/javascript/javascript');
@@ -37,7 +39,8 @@ class App extends Component {
       liveSettings: {
         validate: true,
         disable: false,
-      }
+      },
+      shareURL: null
     };
   }
   
@@ -54,7 +57,7 @@ class App extends Component {
   };
   
   onFormDataEdited = value => {
-    this.setState({ formData: value });
+    this.setState({ formData: value, shareURL: null });
     console.log('formData changedx: ' +   JSON.stringify (value) );
   };
 
@@ -63,6 +66,42 @@ class App extends Component {
      formData: formModel.formData,
      valid: (formModel.errors.length === 0)
     });
+  };
+
+  onShare = () => {
+    const { formData, schema } = this.state;
+    const {
+      location: { origin, pathname },
+    } = document;
+    try {
+      const hash = btoa(JSON.stringify({ formData, schema }));
+      this.setState({ shareURL: `${origin}${pathname}#${hash}` });
+    } catch (err) {
+      this.setState({ shareURL: null });
+    }
+  };
+
+  componentDidMount() {
+    const hash = document.location.hash.match(/#(.*)/);
+    if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
+      try {
+        this.load(JSON.parse(atob(hash[1])));
+      } catch (err) {
+        alert("Unable to load form setup data.");
+      }
+    } else {
+      this.load(sampleSimple);
+    }
+  }
+
+  load = data => {
+    // force resetting form component instance
+    this.setState({ form: false }, _ =>
+      this.setState({
+        ...data,
+        form: true
+      })
+    );
   };
 
   render() {
@@ -114,6 +153,16 @@ class App extends Component {
                 showErrorList={true}
                 valid={valid}
                 >
+
+                <div className="row">
+                  <div className="col-sm-9 text-right">
+                    <CopyLink
+                      shareURL={this.state.shareURL}
+                      onShare={this.onShare}
+                    />
+                  </div>
+                </div>
+
               </CustomForm>                 
             
             </div>
