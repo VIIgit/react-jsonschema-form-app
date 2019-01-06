@@ -87,6 +87,20 @@
   -webkit-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
+.nav-tabs > li {
+  padding-right: 10px;
+  font-size: 0.7rem;
+}
+.nav-tabs > li.active {
+  font-weight: 700;
+}
+
+.unsupported-widget{
+  border: red 1px dashed;
+  color: red;
+  font-size: 0.6rem;
+  padding: 2px;
+}
 /** float container */
 /**
 .float-container {

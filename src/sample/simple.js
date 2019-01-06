@@ -56,7 +56,7 @@ module.exports = {
     formData: {
       lastName: "Norris",
       age: 75,
-      bio: "# My Bio \n\n**Lorem** _ipsum_..."
+      bio: "# My Bio\n**Lorem** _ipsum_..."
     }
 
   };

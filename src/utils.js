@@ -90,6 +90,6 @@ export function getWidget(schema, widget, registeredWidgets = {}) {
     const registeredWidget = registeredWidgets[widgetMap[type][widget]];
     return getWidget(schema, registeredWidget, registeredWidgets);
   }
-  return getWidget(schema, "TextWidget", registeredWidgets);
+  return getWidget(schema, "UnsupportedWidget", registeredWidgets);
   //throw new Error(`No widget "${widget}" for type "${type}"`);
 }

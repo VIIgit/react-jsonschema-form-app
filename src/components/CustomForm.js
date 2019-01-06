@@ -5,7 +5,9 @@ import CustomStringField from './fields/CustomStringField';
 import { setState } from 'react-jsonschema-form/lib/utils';
 
 import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
+import TextareaWidget from 'react-jsonschema-form/lib/components/widgets/TextareaWidget'
 import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'
+
 //import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
 const ReactMarkdown = require('react-markdown')
 
@@ -16,7 +18,8 @@ const CustomDescriptionField = ({id, description}) => {
 const customFields = {
   //TitleField: CustomTitleField,
   //DescriptionField: CustomDescriptionField,
-  //StringField: CustomStringField
+  StringField: CustomStringField
+  
 };
 
 const CustomTitleField = ({title, required}) => {
@@ -91,10 +94,10 @@ const CustomCheckbox = function(props) {
 const MarkdownWidget = function(props) {
   return (
     <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
-      <Tab eventKey={1} title="Edit">
-        <TextWidget  {...props} />
+      <Tab eventKey={1} title="Edit" className="tab">
+        <TextareaWidget  {...props} />
       </Tab>
-      <Tab eventKey={2} title="Preview">
+      <Tab eventKey={2} title="Preview" className="tab">
         <div className="form-control-markdown">
           <ReactMarkdown id={props.id} source={props.value} />
         </div>
@@ -103,8 +106,18 @@ const MarkdownWidget = function(props) {
   );
 };
 
+const UnsupportedWidget = function(props) {
+  console.log(JSON.stringify(props));
+  return (
+    <div className="unsupported-widget">
+      <TextWidget  {...props} />  
+      No default Editor for format <strong>'{props.schema.format}'</strong>
+    </div>
+  );
+};
 const customWidgets = {
-  markdown: MarkdownWidget
+  markdown: MarkdownWidget,
+  UnsupportedWidget: UnsupportedWidget
 };
 
 function CustomForm(props) {
