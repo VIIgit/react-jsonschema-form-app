@@ -7,6 +7,7 @@ import { setState } from 'react-jsonschema-form/lib/utils';
 import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
 import TextareaWidget from 'react-jsonschema-form/lib/components/widgets/TextareaWidget'
 import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'
+import NumberFormat from 'react-number-format'
 
 //import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
 const ReactMarkdown = require('react-markdown')
@@ -91,7 +92,74 @@ const CustomCheckbox = function(props) {
   );
 };
 
+const DecimalFormatWidget = function(props) {
+  const str = props.value;
+  let decimalScale = 0;
+  let value = 0;
+  const displayType = props.schema.readOnly ? 'text' : 'input';
+  if(str){
+    const decimalPos = str.lastIndexOf(".");
+    decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
+    value = Number(str);
+  }
+  return (
+    <NumberFormat id={props.id}  className="form-control form-control-decimal" 
+        value={value}
+        displayType={displayType}
+        decimalScale= {decimalScale}
+        fixedDecimalScale= {true} 
+        thousandSeparator={true} 
+        //prefix={'$'}
+        onValueChange={(values) => {
+          let {formattedValue, value, floatValue} = values;
+          // formattedValue = $2,223
+          // value ie, 2223
+          floatValue = isNaN(floatValue) ? 0 : floatValue; 
+          const strValue = Number(floatValue).toFixed(decimalScale);
+          props.onChange(strValue);
+        }}
+       />
+  );
+};
+
+const PercentageFormatWidget = function(props) {
+  const str = props.value;
+  let decimalScale = 0;
+  let value = 0;
+  const displayType = props.schema.readOnly ? 'text' : 'input';
+  if(str){
+    const decimalPos = str.lastIndexOf(".");
+    decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
+    value = Number(str) * 100;
+  }
+  return (
+    <NumberFormat id={props.id}  className="form-control form-control-decimal" 
+        value={value}
+        displayType={displayType}
+        decimalScale= {decimalScale-2}
+        fixedDecimalScale= {true} 
+        thousandSeparator={true} 
+        suffix={'%'}
+        onValueChange={(values) => {
+          let {formattedValue, value, floatValue} = values;
+          // formattedValue = $2,223
+          // value ie, 2223
+          floatValue = isNaN(floatValue) ? 0 : floatValue/100; 
+          const strValue = Number(floatValue).toFixed(decimalScale);
+          props.onChange(strValue);
+        }}
+       />
+  );
+};
+
 const MarkdownWidget = function(props) {
+  if(props.schema.readOnly){
+    return (
+      <div className="form-control-markdown">
+        <ReactMarkdown id={props.id} source={props.value} />
+      </div>
+    )
+  }
   return (
     <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
       <Tab eventKey={1} title="Edit" className="tab">
@@ -108,15 +176,23 @@ const MarkdownWidget = function(props) {
 
 const UnsupportedWidget = function(props) {
   console.log(JSON.stringify(props));
-  return (
-    <div className="unsupported-widget">
+
+  const readOnly = props.schema.readOnly;
+  if (readOnly) {
+    return <div className="unsupported-widget">
+      <div className="form-control">{props.value}</div>
+      No default Editor for format <strong>'{props.schema.format}'</strong>
+      </div> 
+  }
+  return <div className="unsupported-widget">
       <TextWidget  {...props} />  
       No default Editor for format <strong>'{props.schema.format}'</strong>
-    </div>
-  );
+      </div> 
 };
 const customWidgets = {
   markdown: MarkdownWidget,
+  decimal: DecimalFormatWidget,
+  percentage: PercentageFormatWidget,
   UnsupportedWidget: UnsupportedWidget
 };
 

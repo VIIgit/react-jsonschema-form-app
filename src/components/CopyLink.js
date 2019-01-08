@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 class CopyLink extends Component {
     onCopyClick = event => {
       this.input.select();
@@ -10,9 +12,9 @@ class CopyLink extends Component {
       const { shareURL, onShare } = this.props;
       if (!shareURL) {
         return (
-          <button className="btn btn-default" type="button" onClick={onShare}>
+          <Button className="btn btn-dark" type="button" onClick={onShare}>
             Share
-          </button>
+          </Button>
         );
       }
       return (
@@ -24,12 +26,11 @@ class CopyLink extends Component {
             defaultValue={shareURL}
           />
           <span className="input-group-btn">
-            <button
+            <Button
               className="btn btn-default"
               type="button"
               onClick={this.onCopyClick}>
-              <i className="glyphicon glyphicon-copy" />
-            </button>
+            </Button>
           </span>
         </div>
       );

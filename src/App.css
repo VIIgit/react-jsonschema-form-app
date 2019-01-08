@@ -101,6 +101,10 @@
   font-size: 0.6rem;
   padding: 2px;
 }
+
+.form-control-decimal {
+  text-align: right; 
+}
 /** float container */
 /**
 .float-container {

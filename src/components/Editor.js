@@ -31,17 +31,30 @@ const cmOptions = {
   };
 
 const fromJson = json => JSON.parse(json);
-const ajv = new Ajv({schemaId: 'auto'}); // options can be passed, e.g. {allErrors: true}
+const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 
 class Editor extends Component {
-    constructor(props) {
-      super(props);
-      this.state = { 
-        valid: undefined, 
-        code: props.code, 
-        validationSchema: props.validationSchema
-      };
-    }
+  //ajv.addSch
+  validate = undefined;
+  
+  constructor(props) {
+    super(props);
+    this.state = { 
+      valid: undefined, 
+      code: props.code
+    };
+    ajv.addFormat("markdown", function(data, cb) {
+      return true;
+    });
+    ajv.addFormat("decimal", function(data, cb) {
+      return !isNaN(data);
+    });
+    ajv.addFormat("percentage", function(data, cb) {
+      return !isNaN(data);
+    });
+    
+    this.validate = props.validationSchema ? ajv.compile(props.validationSchema) : undefined
+  }
   
     componentWillReceiveProps(props) {
       this.setState({ valid: true, code: props.code });
@@ -56,7 +69,21 @@ class Editor extends Component {
     }
 
     validateJsonObject(jsonObj){
-      return ajv.validate(this.props.validationSchema, jsonObj);
+      if (this.validate) {
+        //var valid = 
+        if( !this.validate(jsonObj)){
+          var messages = this.validate.errors.map(function(item) {
+            return   item['dataPath'] + ' ' + item['message'];
+          });
+          this.setState({ 
+            valid: false, 
+            errorTitle: 'Invalid Schema',
+            errorDescription: messages.toString()
+          });
+          return false;
+        };
+      }
+      return true;
     }
 
     onCodeChange = (editor, metadata, code) => {
@@ -71,15 +98,7 @@ class Editor extends Component {
         try {
             var jsonObj = this.toValidJsonObject(code);
             var valid = this.validateJsonObject(jsonObj);
-            if (!valid) {
-              
-              this.setState({ 
-                  valid: false, 
-                  errorTitle: 'Invalid Json Schema',
-                  errorDescription: ajv.errorsText()
-                });
-                    
-            } else if (onChange) {
+            if (valid && onChange) {
               onChange(jsonObj);
             } 
         } catch (err) {
@@ -95,6 +114,7 @@ class Editor extends Component {
                   errorTitle: 'Error',
                   errorDescription: err.message
                 });
+              console.log(err.stack);
             }
         }
       });
@@ -120,7 +140,6 @@ class Editor extends Component {
               <span className={`rounded-circle unicode_${icon}`} />
                 {" " + title}
             </div>
-            
           </div>
 
           <CodeMirror

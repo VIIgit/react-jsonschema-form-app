@@ -118,10 +118,10 @@ class App extends Component {
         <div className="container">
           <div className="row">
 
-            <div className="col-md">
+            <div className="col-xl">
               <div className="container"> 
                 <div className="row">
-                  <div className="col-md">
+                  <div className="col">
                     <Editor
                       title="JSONSchema"
                       validationSchema={draft07Schema}
@@ -132,18 +132,19 @@ class App extends Component {
                 </div>
 
                 <div className="row">
-                  <div className="col-md">              
+                  <div className="col">      
                     <Editor
                       title="Form Data"
                       validationSchema={schema}
                       code={toJson(formData)}
+                      onChange={this.onFormDataEdited}
                     />            
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="col-md">
+            <div className="col-xl">
               <CustomForm 
                 title="Form"
                 schema={schema}
@@ -153,16 +154,14 @@ class App extends Component {
                 showErrorList={true}
                 valid={valid}
                 >
-
-                <div className="row">
-                  <div className="col-sm-9 text-right">
-                    <CopyLink
-                      shareURL={this.state.shareURL}
-                      onShare={this.onShare}
-                    />
-                  </div>
+              
+                <div className="text-right">
+                  <CopyLink
+                    shareURL={this.state.shareURL}
+                    onShare={this.onShare}
+                  />
                 </div>
-
+            
               </CustomForm>                 
             
             </div>

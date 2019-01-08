@@ -24,6 +24,7 @@ module.exports = {
         bio: {
           type: "string",
           format: "markdown",
+          readOnly: true,
           title: "Bio",
         },
         gender: {
@@ -45,6 +46,18 @@ module.exports = {
           title: "Telephone",
           minLength: 10,
         },
+        investment: {
+          type: "string",
+          format: "decimal",
+          default: "1000.30",
+          title: "Investment",
+        },
+        discount: {
+          type: "string",
+          format: "percentage",
+          default: "0.305",
+          title: "Discount",
+        },
       },
     },
     uiSchema: {
@@ -56,7 +69,7 @@ module.exports = {
     formData: {
       lastName: "Norris",
       age: 75,
-      bio: "# My Bio\n**Lorem** _ipsum_..."
+      bio: "# My Bio\n**Lorem** _ipsum_... \n\n1. First\n1. Second"
     }
 
   };
