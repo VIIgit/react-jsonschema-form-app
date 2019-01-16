@@ -167,6 +167,12 @@ class App extends Component {
             </div>
           </div>
         </div>
+        <div>
+         <p className="footer">
+            Inspired by <a href="https://github.com/mozilla-services/react-jsonschema-form">react-jsonschema-form</a> and powered by <a href="https://github.com/VIIgit/react-jsonschema-form-app">react-jsonschema-form-app</a>
+          </p>
+
+        </div>        
       </div>
     );
   }
