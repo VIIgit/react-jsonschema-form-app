@@ -4,6 +4,7 @@ import BaseInput from 'react-jsonschema-form/lib/components/widgets/BaseInput';
 import CustomStringField from './fields/CustomStringField';
 import { setState } from 'react-jsonschema-form/lib/utils';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
 import TextareaWidget from 'react-jsonschema-form/lib/components/widgets/TextareaWidget'
 import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'

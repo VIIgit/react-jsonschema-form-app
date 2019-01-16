@@ -81,6 +81,19 @@ class App extends Component {
     }
   };
 
+  
+  load = data => {
+    // force resetting form component instance
+    console.log(data);
+    
+    this.setState({ form: true }, _ =>
+        this.setState({
+          ...data,
+          form: false
+        })
+      );
+    };
+    
   componentDidMount() {
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
@@ -92,16 +105,6 @@ class App extends Component {
     } else {
       this.load(sampleSimple);
     }
-  }
-
-  load = data => {
-    // force resetting form component instance
-    this.setState({ form: false }, _ =>
-      this.setState({
-        ...data,
-        form: true
-      })
-    );
   };
 
   render() {
@@ -171,7 +174,6 @@ class App extends Component {
          <p className="footer">
             Inspired by <a href="https://github.com/mozilla-services/react-jsonschema-form">react-jsonschema-form</a> and powered by <a href="https://github.com/VIIgit/react-jsonschema-form-app">react-jsonschema-form-app</a>
           </p>
-
         </div>        
       </div>
     );

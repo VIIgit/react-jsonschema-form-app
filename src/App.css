@@ -136,3 +136,28 @@
           transform: translate(0, 2px) scale(0.65);
 }
 */
+
+
+
+.glyphicon-plus::before {
+  content: '+';
+}
+
+.glyphicon-arrow-up::before {
+  content: '▲';
+}
+
+.glyphicon-arrow-down::before {
+  content: '▼';
+}
+
+.glyphicon-remove::before {
+  content: '×';
+}
+
+.footer {
+
+  font-size: 0.6rem;
+  text-align:center;
+
+}

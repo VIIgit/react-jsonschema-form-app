@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Ajv from 'ajv';
 
-import {UnControlled as CodeMirror} from 'react-codemirror2';
+import {Controlled as CodeMirror} from 'react-codemirror2';
 import { shouldRender } from "react-jsonschema-form/lib/utils";
 
 import AlertMessage from './AlertMessage';
@@ -70,7 +70,6 @@ class Editor extends Component {
 
     validateJsonObject(jsonObj){
       if (this.validate) {
-        //var valid = 
         if( !this.validate(jsonObj)){
           var messages = this.validate.errors.map(function(item) {
             return   item['dataPath'] + ' ' + item['message'];
@@ -87,19 +86,23 @@ class Editor extends Component {
     }
 
     onCodeChange = (editor, metadata, code) => {
-      
+     
       const { onChange } = this.props;
-
-      this.setState({ valid: true,
-        errorTitle: undefined,
-        errorDescription: undefined });
       
-      setImmediate(() => {
+      
         try {
             var jsonObj = this.toValidJsonObject(code);
             var valid = this.validateJsonObject(jsonObj);
-            if (valid && onChange) {
-              onChange(jsonObj);
+            if (valid ) {
+              this.setState({ valid: true,
+                errorTitle: undefined,
+                errorDescription: undefined,
+                code: code
+               });
+
+              if (onChange){
+                onChange(jsonObj);
+              }
             } 
         } catch (err) {
             if (err instanceof SyntaxError) {
@@ -117,7 +120,6 @@ class Editor extends Component {
               console.log(err.stack);
             }
         }
-      });
     };
   
     render() {
@@ -145,7 +147,13 @@ class Editor extends Component {
           <CodeMirror
             value={code}
             onChange={this.onCodeChange}
-            autoCursor={false}
+
+            editorDidMount={(editor) => {
+              editor.refresh();
+            }}
+            onBeforeChange={(editor, data, value) => {
+              this.setState({code: value});
+            }}
             options={Object.assign({}, cmOptions)}
           />
           <AlertMessage 
