@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Ajv from 'ajv';
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
-import { shouldRender } from "react-jsonschema-form/lib/utils";
+import { shouldRender, deepEquals } from "react-jsonschema-form/lib/utils";
 
 import AlertMessage from './AlertMessage';
 
@@ -34,15 +34,12 @@ const fromJson = json => JSON.parse(json);
 const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
 
 class Editor extends Component {
-  //ajv.addSch
-  validate = undefined;
   
+  validate = undefined;
+  validationSchema = undefined;
+
   constructor(props) {
     super(props);
-    this.state = { 
-      valid: undefined, 
-      code: props.code
-    };
     ajv.addFormat("markdown", function(data, cb) {
       return true;
     });
@@ -53,9 +50,20 @@ class Editor extends Component {
       return !isNaN(data);
     });
     
-    this.validate = props.validationSchema ? ajv.compile(props.validationSchema) : undefined
+    this.updateValidationSchema(props.validationSchema);
+    
+    this.state = { 
+      valid: undefined, 
+      code: props.code
+    };
   }
   
+  updateValidationSchema(validationSchema){
+    if (!deepEquals(this.validationSchema, validationSchema)){
+      this.validationSchema= validationSchema;
+      this.validate = validationSchema ? ajv.compile(validationSchema) : undefined;
+    }
+  }
     componentWillReceiveProps(props) {
       this.setState({ valid: true, code: props.code });
     }
@@ -69,9 +77,10 @@ class Editor extends Component {
     }
 
     validateJsonObject(jsonObj){
-      if (this.validate) {
-        if( !this.validate(jsonObj)){
-          var messages = this.validate.errors.map(function(item) {
+      const validate  = this.validate;
+      if (validate) {
+        if( !validate(jsonObj)){
+          var messages = validate.errors.map(function(item) {
             return   item['dataPath'] + ' ' + item['message'];
           });
           this.setState({ 
@@ -123,7 +132,7 @@ class Editor extends Component {
     };
   
     render() {
-      const { title } = this.props;
+      const { title, validationSchema} = this.props;
       const icon = this.state.valid ? "ok" : "nok";
       const cls = this.state.valid ? "valid" : "invalid";
 
@@ -133,6 +142,8 @@ class Editor extends Component {
         errorTitle,
         errorDescription,
       } = this.state;
+
+      this.updateValidationSchema(validationSchema);
 
       return (
         <div className="panel panel-default">
