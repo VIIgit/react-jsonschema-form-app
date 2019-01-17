@@ -58,6 +58,15 @@ module.exports = {
           default: "0.305",
           title: "Discount",
         },
+        hobbies: {
+          type: "array",
+          title: "Hobbies",
+          uniqueItems: true,
+          items: {
+            type: "string",
+            default: "Sport"
+          }
+        }
       },
     },
     uiSchema: {
@@ -69,7 +78,11 @@ module.exports = {
     formData: {
       lastName: "Norris",
       age: 75,
-      bio: "# My Bio\n**Lorem** _ipsum_... \n\n1. First\n1. Second"
+      bio: "# My Bio\n**Lorem** _ipsum_... \n\n1. First\n1. Second",
+      hobbies: [
+        "Biking",
+        "Ski"
+      ]
     }
 
   };

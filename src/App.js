@@ -118,10 +118,10 @@ class App extends Component {
     return (
       <div className="App">
 
-        <div className="container">
+        <div className="container-fluid">
           <div className="row">
 
-            <div className="col-xl">
+            <div className="col-sm-7">
               <div className="container"> 
                 <div className="row">
                   <div className="col">
@@ -147,7 +147,7 @@ class App extends Component {
               </div>
             </div>
             
-            <div className="col-xl">
+            <div className="col-sm-5">
               <CustomForm 
                 title="Form"
                 schema={schema}

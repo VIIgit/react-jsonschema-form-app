@@ -156,8 +156,28 @@
 }
 
 .footer {
-
   font-size: 0.6rem;
   text-align:center;
+}
 
+.array-item{
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -5px;
+  margin-left: -5px;
+  width: 100%;
+  padding: 0 20px;
+  height: 45px;
+}
+
+.array-item-add{
+  padding-left: 15px;
+}
+
+.array-item-move-up[disabled]{
+  color: #adabab;
+}
+
+.array-item-move-down[disabled]{
+  color: #adabab;
 }
