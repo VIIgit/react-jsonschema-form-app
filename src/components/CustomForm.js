@@ -2,6 +2,7 @@ import React from 'react';
 import Form from "react-jsonschema-form-local-link";
 import BaseInput from 'react-jsonschema-form-local-link/lib/components/widgets/BaseInput';
 import CustomStringField from './fields/CustomStringField';
+import FilePreviewWidget from './widgets/FilePreviewWidget';
 import { setState } from 'react-jsonschema-form-local-link/lib/utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -192,9 +193,11 @@ const UnsupportedWidget = function(props) {
 };
 const customWidgets = {
   markdown: MarkdownWidget,
+  "text/plain": TextareaWidget,
   decimal: DecimalFormatWidget,
   percentage: PercentageFormatWidget,
-  UnsupportedWidget: UnsupportedWidget
+  UnsupportedWidget: UnsupportedWidget,
+  "data-url": FilePreviewWidget
 };
 
 function CustomForm(props) {

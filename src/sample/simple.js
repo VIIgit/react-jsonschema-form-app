@@ -27,6 +27,11 @@ module.exports = {
         readOnly: true,
         title: "Bio",
       },
+      address: {
+        type: "string",
+        format: "text/plain",
+        title: "Address",
+      },
       gender: {
         type: "string",
         enum: [
@@ -67,7 +72,12 @@ module.exports = {
           default: "Sport"
         }
       },
-
+      
+      favouriteColor: {
+        type: "string",
+        format: "color",
+        title: "Favourite Color"
+      },
       profileImage: {
         type: "string",
         format: "data-url",
@@ -153,6 +163,8 @@ module.exports = {
     lastName: "Jack",
     age: 75,
     bio: "# My Bio\n**Lorem** _ipsum_... \n\n1. First\n1. Second",
+    address: "24 Main Street\nAuckland",
+    favouriteColor: "#ffd300",
     hobbies: [
       "Biking",
       "Ski"
@@ -161,7 +173,8 @@ module.exports = {
       "selfEmployed": {
         "companyName": "MyCompany Ltd."
       }
-    }
+    },
+    profileImage: "data:image/png;name=logo.png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAC6klEQVR4Ae3cA4xdQRgF4Nq2bbtBbTdOFdW2bdu2bdu2u7Ztneal8U73zlTzpntOTrD6k3yrd++dmTSYkxZz0kiUTUsChZKAWMQiFrGIxZKAWMQiFrGIxZKAWMQiVqrCWlse5wbg2kT77gSc7Y81ZbRiXR6NxHiYkoRYnB+kCWtPCyAJZiUpEdsb68B6tBIm5t5CHVgvthmJ9WQtsYhFLGIRK+U+22Qk1qOVOrDODTAS62QfHVjzMsLltmFSDpcxN72my535mXB5FJyuw/etvdfhCi4MxbwMvOvAWzTEIhaxlP4tLshi752XUTfWymJwugZT8vUClhfWhLWsAMK9YFZCXLAktw6sG1NgYq6M0XIhvdVIrMdr/hgW7zoQi1jEIhax7i0wEuvmdB1Y68ojLsowqdgwrCqh6XJnV1MEfjVGyv8TtjfWfSG9roJNbVczO25TrCnLWzS8n0UsYhFL/WkYPp2Ew2VBP53C1XFYkNliyKWR8HqOUDeEuierG7xf4cZki43v5wbC7z2iAhAdLGiEDxyuYFMtrVgHOiA+GpZJjMe+duIJC7LaRGQS6Y+l+cRDvF7ILvs7P1gT1sriagtKF+UQDPlyFvJxuSuYcH4Q5JOYgGUFdGBdGKp4i3KcYEi4N+QTEyaY4HAJSjnYRQfWlbFQyp25giGRfpBPXIRgguoTk8PdiUUsYhGLWMQiFrGIRSxiEYtYxCIWsYhFLGIRi1jEkgmxHK9CKYe66cA62w9KOT9QMMT/I+QT6i6YcH8RFJKEDVV1YC3Nr7DDIj5a/Fz6RE8kJUIyF4eLH9NGBUAyr3boeyK9pQ78PsAygd+wufaPLxF7hftYTIgKwtn+P52wvBDeHUgZ3QZ6bQLmptOGZeu89NjTEpdGCM9isr1/b2vrzbZz02FbQxzqgkNdk7ULtjeW2q67OLftm7e9kaAbqoonqGOxxCIWsYhFLGKxxCIWsYhFLGL9pyUWsYhFLGKlpYJc034HUuzQ02DHy2QAAAAASUVORK5CYII="
   }
 
 };
