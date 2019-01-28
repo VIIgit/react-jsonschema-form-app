@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component , Alert} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CustomForm from './components/CustomForm';
@@ -49,11 +49,19 @@ class App extends Component {
   }
 
   onSchemaEdited = schema => {
-    this.setState({ 
-      schema: schema, 
-      shareURL: null
-     });
-    log('form changed: ' + JSON.stringify (schema));
+    try{
+      this.setState({ 
+        schema: schema, 
+        shareURL: null,
+        valid: false
+       });
+    } catch(err) {
+      this.setState({ 
+        shareURL: null,
+        valid: false
+       });
+       alert('Error: \n' + err.message);
+    }
   };
   
   onFormDataEdited = value => {

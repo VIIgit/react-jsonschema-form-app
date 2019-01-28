@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Ajv from 'ajv';
+import YAML from 'yaml';
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
 import { shouldRender, deepEquals } from "react-jsonschema-form/lib/utils";
@@ -61,7 +62,16 @@ class Editor extends Component {
   updateValidationSchema(validationSchema){
     if (!deepEquals(this.validationSchema, validationSchema)){
       this.validationSchema= validationSchema;
-      this.validate = validationSchema ? ajv.compile(validationSchema) : undefined;
+      try{
+        this.validate = validationSchema ? ajv.compile(validationSchema) : undefined;
+      } catch(ex){
+        this.validate = undefined;
+        this.setState({ 
+          valid: false, 
+          errorTitle: 'Invalid Schema',
+          errorDescription: ex.message
+        });
+      }
     }
   }
     componentWillReceiveProps(props) {
@@ -92,6 +102,19 @@ class Editor extends Component {
         };
       }
       return true;
+    }
+
+    convertYamlToJson = (potentialYaml) => {
+      var result = {json: undefined, errorMsg: undefined};
+      if (potentialYaml.indexOf('{') < 0 && potentialYaml.indexOf('[') < 0 ){
+        try{
+          var yamlText = YAML.parse(potentialYaml);
+          result.json = JSON.stringify(yamlText);
+        } catch (ex){
+          result.errorMsg = ex.message;
+        }
+      }
+      return result;
     }
 
     onCodeChange = (editor, metadata, code) => {
@@ -158,12 +181,44 @@ class Editor extends Component {
           <CodeMirror
             value={code}
             onChange={this.onCodeChange}
-
             editorDidMount={(editor) => {
               editor.refresh();
             }}
             onBeforeChange={(editor, data, value) => {
-              this.setState({code: value});
+
+                if (data.origin == 'paste') {
+
+                  if (data.text.length > 1 ){
+                    const result = this.convertYamlToJson(data.text.join('\n'));
+
+                    if (result.json){
+
+                      if (!(data.from.line == 0 && data.from.ch == 0)){
+                        result.json = result.json.substring(1, result.json.length-1)+ ',';
+                      }
+
+                      alert("Converted to:\n" + result.json);
+
+
+                      editor.refresh();
+                      // my first idea was
+                      // note: for multiline strings may need more complex calculations
+                      editor.replaceRange(result.json, data.from, data.to);
+                      // first solution did'nt work (before i guess to call refresh) so i tried that way, works too
+                      /* cm.execCommand('undo');
+                      cm.setCursor(event.from);
+                      cm.replaceSelection(new_text); */
+
+                    } else {
+                      this.setState({code: value});
+                    }
+                  }
+  
+                } else {
+                  this.setState({code: value});
+                }
+
+              
             }}
             options={Object.assign({}, cmOptions)}
           />
