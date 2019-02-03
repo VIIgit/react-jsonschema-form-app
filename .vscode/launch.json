@@ -9,7 +9,10 @@
             "request": "launch",
             "name": "App Chrome localhost",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
+            “runtimeArgs”: [
+                “--preserve-symlinks”
+            ]
         }
     ]
 }

@@ -163,7 +163,7 @@ const MarkdownWidget = function(props) {
     )
   }
   return (
-    <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
+    <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example" className="preview-menu">
       <Tab eventKey={1} title="Edit" className="tab">
         <TextareaWidget  {...props} />
       </Tab>
@@ -197,7 +197,8 @@ const customWidgets = {
   decimal: DecimalFormatWidget,
   percentage: PercentageFormatWidget,
   UnsupportedWidget: UnsupportedWidget,
-  "data-url": FilePreviewWidget
+  "data-url": FilePreviewWidget,
+  "int64": DecimalFormatWidget
 };
 
 function CustomForm(props) {

@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import FileWidget from 'react-jsonschema-form-local-link/lib/components/widgets/FileWidget'
 
 function FilePreviewWidget(props) {
-  const { BaseInput } = props.registry.widgets;
+  const isAnImage = props.value && props.value.startsWith('data:image');
+  if (!isAnImage) {
+    return <FileWidget {...props} />;
+  }
   return (
     <div>
-      <p>
-        <FileWidget {...props} />
-      </p>
-      <img width="100px" height="100px" src={props.value} alt="Roter Punkt" />
+      <FileWidget {...props} />
+      <img className="previewImage" width="80px" height="80px" src={props.value} />
     </div>
   );
 }

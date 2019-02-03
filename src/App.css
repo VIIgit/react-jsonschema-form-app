@@ -1,3 +1,9 @@
+:root {
+  --theme-primary-color: blue;
+  --theme-darkgrey-color: rgb(51, 51, 51);
+  --theme-darkgrey-color: rgb(228, 65, 65);
+}
+
 .App {
  /*text-align: center;*/
 }
@@ -105,6 +111,8 @@
 .form-control-decimal {
   text-align: right; 
 }
+
+
 /** float container */
 /**
 .float-container {
@@ -180,4 +188,116 @@
 
 .array-item-move-down[disabled]{
   color: #adabab;
+}
+
+.previewImage{
+  margin-left: 20px;
+}
+
+legend {
+  border-bottom: #252523 1px solid;
+  color:  #252523;
+  padding-left: 5px;
+}
+
+.control-label, div.field-array legend{
+
+  padding: 3px 3px 0px 10px;
+  color:rgb(107, 106, 93);
+  font-weight: 900;
+  font-size: small;
+  margin-bottom: 0px;
+  border-bottom-width: 0;
+}
+.field-description{
+  padding: 0px 3px 0px 10px;
+  color:rgb(107, 106, 93);
+  
+  font-size: small;
+  font-style: italic;
+  margin-bottom: 0px;
+}
+div.field-array {
+  padding-left: 5px;
+}
+
+
+.form-group{
+  x-border-radius: 8px;
+  x-border-radius: 8px;
+  x-background-color: rgba(57, 57, 57, 0.1);
+  x-background-color: rgba(163, 146, 116, 0.2);
+
+
+  Golden-wheat: #a39274;
+
+  Soft-Wheat: #dfd8c8;
+  
+  Deep-gray: #252523;
+
+}
+
+.field-string, .field-integer, div.field-array {
+  border-radius: 8px;
+  border: #948c81 2px solid;
+}
+
+.form-control:focus { 
+  background-color: #FFEFB6;
+
+  outline: none;
+  box-shadow:none;
+}
+
+.form-control {
+  border-width: 0;
+}
+
+.blood-orange-gradient { 
+  background: -webkit-linear-gradient(360deg, #d64759 10%, #da7352 360%); /* Chrome 10+, Saf5.1+ */ 
+  background: linear-gradient(360deg, #d64759 10%, #da7352 360%); /* W3C */ 
+}
+
+.required {
+  color: #9e2c3b;
+}
+
+div.preview-menu ul {
+
+  float: right;
+  border-bottom-width: 0;
+
+}
+.form-group { 
+
+}
+div.panel-body fieldset legend {
+  height: 3px;
+  border-top-color: #747474;
+  border-top-width: 1px;
+  overflow: hidden;
+  margin-bottom: 3;
+}
+
+.btn-group {
+  margin-top: 2px;
+  background-color: #e4dfd8;
+  border-radius: 2px;
+}
+
+.bg-light{
+  background-color: #333333!important;
+  background-color: var(--theme-darkgrey-color);
+  margin-bottom: 10px;
+}
+.navbar-brand {
+  color: #e4dfd8!important;
+}
+
+a.navbar-brand img {
+  margin-right: 10px;
+}
+
+.left-nav {
+  padding: 0px;
 }

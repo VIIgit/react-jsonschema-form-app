@@ -12,7 +12,10 @@ import './App.css';
 
 import CopyLink from './components/CopyLink'
 
-import sampleSimple from './sample/simple';
+import { samples } from "./samples";
+import sampleSimple from './samples/widgets';
+
+import Logo from './images/w.png';
 
 require('codemirror/mode/javascript/javascript');
 require('bootstrap') ;
@@ -23,6 +26,47 @@ const log = (type) => console.log.bind(console, type);
 
 const fromJson = json => JSON.parse(json);
 const toJson = val => JSON.stringify(val, null, 2);
+
+
+class Selector extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { current: "Simple" };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  onLabelClick = label => {
+    return event => {
+      event.preventDefault();
+      this.setState({ current: label });
+      setImmediate(() => this.props.onSelected(samples[label]));
+    };
+  };
+
+  render() {
+    return (
+      <div class="btn-group">
+        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          JSON schema examples
+        </button>
+        <div class="dropdown-menu">
+
+          {Object.keys(samples).map((label, i) => {
+            return (
+              <a key={i}
+                role="presentation" href="#" className={this.state.current === label ? "active dropdown-item" : "dropdown-item"} onClick={this.onLabelClick(label)} >
+                {label}
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+}
 
 class App extends Component {
 
@@ -126,11 +170,19 @@ class App extends Component {
     return (
       <div className="App">
 
+        <nav class="navbar navbar-light bg-light">
+          <a class="navbar-brand" href="#">
+            <img src={Logo} width="30" height="30" className="d-inline-block align-top" alt="" />
+          JSONSchema Form
+          </a>
+          <Selector onSelected={this.load} />
+        </nav>
+
         <div className="container-fluid">
           <div className="row">
 
-            <div className="col-sm-7">
-              <div className="container"> 
+            <div className="col-sm-7 left-nav">
+              <div className="container sticky-top"> 
                 <div className="row">
                   <div className="col">
                     <Editor

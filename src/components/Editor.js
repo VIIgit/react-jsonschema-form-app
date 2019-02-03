@@ -50,7 +50,24 @@ class Editor extends Component {
     ajv.addFormat("percentage", function(data, cb) {
       return !isNaN(data);
     });
+    ajv.addFormat("text/plain", function(data, cb) {
+      return true;
+    });
+    ajv.addFormat("color", function(data, cb) {
+      return true;
+    });
+    ajv.addFormat("data-url", function(data, cb) {
+      return true;
+    });
+    ajv.addFormat("int64", function(data, cb) {
+      return !isNaN(data);
+    });
+    ajv.addFormat("int32", function(data, cb) {
+      return !isNaN(data);
+    });
+
     
+
     this.updateValidationSchema(props.validationSchema);
     
     this.state = { 
@@ -212,6 +229,10 @@ class Editor extends Component {
                     } else {
                       this.setState({code: value});
                     }
+                    editor.setCursor(data.to);
+                  } else {
+                    editor.replaceRange(data.text, data.from, data.to);
+                    editor.setCursor(data.to);
                   }
   
                 } else {
