@@ -24,12 +24,12 @@ module.exports = {
         ]
       },
       age: {
-        type: "integer",
+        type: "string",
         title: "Age",
         oneOf: [
           {const: "TEENAGER", title: "after puberty but < 19 years"},
           {const: "YOUNG_ADULT", title: "between 19 to 25 years"},
-          {const: "YOUNG_ADULT", title: "> 25 years"},
+          {const: "ADULT", title: "> 25 years"},
           {const: "SENIOR", title: "senior citizens"},
         ]        
       },

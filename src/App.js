@@ -198,6 +198,7 @@ class App extends Component {
                   <div className="col">      
                     <Editor
                       title="Form Data"
+                      className="form-data"
                       validationSchema={schema}
                       code={toJson(formData)}
                       onChange={this.onFormDataEdited}

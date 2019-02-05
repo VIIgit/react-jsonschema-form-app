@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import FileWidget from 'react-jsonschema-form-local-link/lib/components/widgets/FileWidget'
+import FileWidget from 'react-jsonschema-form/lib/components/widgets/FileWidget'
 
 function FilePreviewWidget(props) {
   const isAnImage = props.value && props.value.startsWith('data:image');

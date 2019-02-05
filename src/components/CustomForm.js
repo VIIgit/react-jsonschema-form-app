@@ -1,17 +1,17 @@
 import React from 'react';
-import Form from "react-jsonschema-form-local-link";
-import BaseInput from 'react-jsonschema-form-local-link/lib/components/widgets/BaseInput';
+import Form from "react-jsonschema-form";
+import BaseInput from 'react-jsonschema-form/lib/components/widgets/BaseInput';
 import CustomStringField from './fields/CustomStringField';
 import FilePreviewWidget from './widgets/FilePreviewWidget';
-import { setState } from 'react-jsonschema-form-local-link/lib/utils';
+import { setState } from 'react-jsonschema-form/lib/utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
-import TextareaWidget from 'react-jsonschema-form-local-link/lib/components/widgets/TextareaWidget'
-import TextWidget from 'react-jsonschema-form-local-link/lib/components/widgets/TextWidget'
+import TextareaWidget from 'react-jsonschema-form/lib/components/widgets/TextareaWidget'
+import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'
 import NumberFormat from 'react-number-format'
 
-//import ObjectFieldTemplate from "react-jsonschema-form-local-link/lib/components/fields";
+//import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
 const ReactMarkdown = require('react-markdown')
 
 const CustomDescriptionField = ({id, description}) => {

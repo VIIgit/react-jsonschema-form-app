@@ -40,7 +40,7 @@
 
 
 .CodeMirror {
-  min-height: 400px;
+  min-height: 200px;
 }
 
 .widget {
@@ -300,4 +300,8 @@ a.navbar-brand img {
 
 .left-nav {
   padding: 0px;
+}
+
+.form-data {
+  height: 300px;
 }
