@@ -4,8 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomForm from './components/CustomForm';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
+//import Switch from "react-switch";
+import Switch from 'rc-switch';
+import 'rc-switch/assets/index.css';
+
 import 'codemirror/lib/codemirror.css';
 import Editor from './components/Editor';
+
+import JsonSchemaValidator from './components/JsonSchemaValidator';
+import JsonConverter from './components/JsonConverter';
+import YamlConverter from './components/YamlConverter';
 
 import 'codemirror/theme/material.css';
 import './App.css';
@@ -42,17 +50,17 @@ class Selector extends Component {
     return event => {
       event.preventDefault();
       this.setState({ current: label });
-      setImmediate(() => this.props.onSelected(samples[label]));
+      this.props.onSelected(samples[label]);
     };
   };
 
   render() {
     return (
-      <div class="btn-group">
-        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <div className="btn-group">
+        <button className="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           JSON schema examples
         </button>
-        <div class="dropdown-menu">
+        <div className="dropdown-menu">
 
           {Object.keys(samples).map((label, i) => {
             return (
@@ -72,7 +80,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-
+    
     const { schema, formData } = sampleSimple;
 
     this.state = {
@@ -84,8 +92,12 @@ class App extends Component {
         validate: true,
         disable: false,
       },
-      shareURL: null
+      shareURL: null,
+      schemaAsJson: true
     };
+
+    this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema, jsonObj: schema});
+    this.dataValidator = new JsonSchemaValidator({validationSchema: schema, jsonObj: formData});
   }
   
   shouldComponentUpdate(nextProps, nextState) {
@@ -94,8 +106,11 @@ class App extends Component {
 
   onSchemaEdited = schema => {
     try{
+
+      this.schemaValidator.setJsonObject(schema).validate();
+
       this.setState({ 
-        schema: schema, 
+        schema: schema ? schema : {}, 
         shareURL: null,
         valid: false
        });
@@ -141,6 +156,7 @@ class App extends Component {
     this.setState({ form: true }, _ =>
         this.setState({
           ...data,
+          schemaAsJson: true,
           form: false
         })
       );
@@ -159,19 +175,39 @@ class App extends Component {
     }
   };
 
+  setEditorMode = isSchemaAsJson => {
+    return event => {
+      event.preventDefault();
+      this.setState({ schemaAsJson: isSchemaAsJson });
+      //setImmediate(() => this.props.onSelected(samples[label]));
+    };
+  };
+
+  onChange = (value, event) => {
+    console.log(`switch checked: ${value}`, event); // eslint-disable-line
+    
+      event.preventDefault();
+      this.setState({ schemaAsJson: value });
+      //setImmediate(() => this.props.onSelected(samples[label]));
+    
+  }
+
   render() {
     const {
       schema,
       formData,
       liveSettings,
-      valid
+      valid,
+      schemaAsJson
     } = this.state;
-
+    const isSchemaValid = this.schemaValidator.isValid();
+    const isDataValid = this.dataValidator.isValid();
+  
     return (
       <div className="App">
 
-        <nav class="navbar navbar-light bg-light">
-          <a class="navbar-brand" href="#">
+        <nav className="navbar navbar-light bg-light">
+          <a className="navbar-brand" href="#">
             <img src={Logo} width="30" height="30" className="d-inline-block align-top" alt="" />
           JSONSchema Form
           </a>
@@ -185,24 +221,57 @@ class App extends Component {
               <div className="container sticky-top"> 
                 <div className="row">
                   <div className="col">
-                    <Editor
-                      title="JSONSchema"
-                      validationSchema={draft07Schema}
-                      code={toJson(schema)}
-                      onChange={this.onSchemaEdited}
-                    />
+
+                    <div className="panel panel-default">
+                      <div className={`${isSchemaValid ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                        <div >
+                          <span className={`rounded-circle unicode_${isSchemaValid ? "ok" : "nok"}`} />
+                            {"JSONSchema"}
+                        </div>
+                        <Switch
+                          onChange={this.onChange}
+                          checked={schemaAsJson}
+                          checkedChildren="JSON"
+                          unCheckedChildren="YAML"
+                        />
+                      </div>
+
+                      <Editor
+                        
+                        jsonSchemaValidator={this.schemaValidator} 
+                        converter={schemaAsJson ? JsonConverter : YamlConverter}
+                        codeObject={schema}
+                        onChange={this.onSchemaEdited}
+
+                        yaml={!schemaAsJson}
+                      />
+
+                    </div>
+                 
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col">      
-                    <Editor
-                      title="Form Data"
-                      className="form-data"
-                      validationSchema={schema}
-                      code={toJson(formData)}
-                      onChange={this.onFormDataEdited}
-                    />            
+                    <div className="panel panel-default">
+                      <div className={`${isDataValid ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                        <div >
+                          <span className={`rounded-circle unicode_${isDataValid ? "ok" : "nok"}`} />
+                            {"Form Data"}
+                        </div>
+                        
+                      </div>
+
+                      <Editor
+                        className="form-data"
+                        
+                        jsonSchemaValidator={this.dataValidator}  
+                        converter={JsonConverter}
+
+                        codeObject={formData}
+                        onChange={this.onFormDataEdited}
+                      />     
+                     </div>       
                   </div>
                 </div>
               </div>

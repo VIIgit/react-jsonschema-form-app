@@ -305,3 +305,30 @@ a.navbar-brand img {
 .form-data {
   height: 300px;
 }
+.dropdown-menu {
+  z-index: 10000;
+}
+
+
+
+.rc-switch-checked::after{
+  left: 42px;
+}
+.rc-switch {
+  width: 64px;
+}
+
+
+.rc-switch-inner{
+  color: #e3e4e6;
+}
+
+.rc-switch {
+  border: 1px solid #252523;
+  background-color: #252523;
+}
+
+.cm-tab::before {
+  content: '⇥';
+  color: #b3b3b0;
+}
