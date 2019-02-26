@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 class CopyLink extends Component {

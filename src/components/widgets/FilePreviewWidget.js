@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import FileWidget from 'react-jsonschema-form/lib/components/widgets/FileWidget'
 
 function FilePreviewWidget(props) {
@@ -9,7 +9,7 @@ function FilePreviewWidget(props) {
   return (
     <div>
       <FileWidget {...props} />
-      <img className="previewImage" width="80px" height="80px" src={props.value} />
+      <img alt="" className="previewImage" width="80px" height="80px" src={props.value} />
     </div>
   );
 }

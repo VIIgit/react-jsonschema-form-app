@@ -1,4 +1,4 @@
-import React, { Component , Alert} from 'react';
+import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import CustomForm from './components/CustomForm';
@@ -21,7 +21,7 @@ import './App.css';
 import CopyLink from './components/CopyLink'
 
 import { samples } from "./samples";
-import sampleSimple from './samples/widgets';
+import sampleSimple from './samples/mostCommon';
 
 import Logo from './images/w.png';
 
@@ -30,11 +30,6 @@ require('bootstrap') ;
 require('util');
 
 const draft07Schema = require('ajv/lib/refs/json-schema-draft-07.json');
-const log = (type) => console.log.bind(console, type);
-
-const fromJson = json => JSON.parse(json);
-const toJson = val => JSON.stringify(val, null, 2);
-
 
 class Selector extends Component {
   constructor(props) {
@@ -151,7 +146,6 @@ class App extends Component {
   
   load = data => {
     // force resetting form component instance
-    console.log(data);
     
     this.setState({ form: true }, _ =>
         this.setState({
@@ -163,6 +157,7 @@ class App extends Component {
     };
     
   componentDidMount() {
+
     const hash = document.location.hash.match(/#(.*)/);
     if (hash && typeof hash[1] === "string" && hash[1].length > 0) {
       try {
@@ -242,7 +237,6 @@ class App extends Component {
                         converter={schemaAsJson ? JsonConverter : YamlConverter}
                         codeObject={schema}
                         onChange={this.onSchemaEdited}
-
                         yaml={!schemaAsJson}
                       />
 
