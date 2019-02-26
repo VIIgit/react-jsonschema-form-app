@@ -1,33 +1,18 @@
 import React from 'react';
 import Form from "react-jsonschema-form";
-import BaseInput from 'react-jsonschema-form/lib/components/widgets/BaseInput';
 import CustomStringField from './fields/CustomStringField';
 import FilePreviewWidget from './widgets/FilePreviewWidget';
-import { setState } from 'react-jsonschema-form/lib/utils';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, OverlayTrigger, Tooltip, Tabs, Tab} from 'react-bootstrap';
+import { Tabs, Tab} from 'react-bootstrap';
 import TextareaWidget from 'react-jsonschema-form/lib/components/widgets/TextareaWidget'
 import TextWidget from 'react-jsonschema-form/lib/components/widgets/TextWidget'
 import NumberFormat from 'react-number-format'
 
-//import ObjectFieldTemplate from "react-jsonschema-form/lib/components/fields";
 const ReactMarkdown = require('react-markdown')
 
-const CustomDescriptionField = ({id, description}) => {
-  return <div id={id}>{description}</div>;
-};
-
 const customFields = {
-  //TitleField: CustomTitleField,
-  //DescriptionField: CustomDescriptionField,
   StringField: CustomStringField
-  
-};
-
-const CustomTitleField = ({title, required}) => {
-  const legend = required ? title + '*x' : title;
-  return <div id="custom"> xxxxx {legend}</div>;
 };
 
 function ErrorListTemplate(props) {
@@ -46,11 +31,11 @@ function ErrorListTemplate(props) {
 }
 
 export function CustomFieldTemplate(props) {
-  const {id, classNames, label, help, required, description, errors, children} = props;
+  const {id, label, help, required, description, errors, children} = props;
   
   return (
-    <div className='{classNames} float-container '>
-      <label htmlFor={id}>{label}{required ? "*" : null}</label>
+    <div className=' float-container '>
+      <label htmlFor={id}>{label}{required ? " *" : null}</label>
       {children}
       {description}
       {errors}
@@ -86,14 +71,6 @@ function transformErrors(errors) {
   });
 }
 
-const CustomCheckbox = function(props) {
-  return (
-    <button id={props.id} className={props.value ? "checked" : "unchecked"} onClick={() => props.onChange(!props.value)}>
-    	{props.value}
-    </button>
-  );
-};
-
 const DecimalFormatWidget = function(props) {
   const str = props.value;
   let decimalScale = 0;
@@ -113,7 +90,7 @@ const DecimalFormatWidget = function(props) {
         thousandSeparator={true} 
         //prefix={'$'}
         onValueChange={(values) => {
-          let {formattedValue, value, floatValue} = values;
+          let {floatValue} = values;
           // formattedValue = $2,223
           // value ie, 2223
           floatValue = isNaN(floatValue) ? 0 : floatValue; 
@@ -143,7 +120,7 @@ const PercentageFormatWidget = function(props) {
         thousandSeparator={true} 
         suffix={'%'}
         onValueChange={(values) => {
-          let {formattedValue, value, floatValue} = values;
+          let {floatValue} = values;
           // formattedValue = $2,223
           // value ie, 2223
           floatValue = isNaN(floatValue) ? 0 : floatValue/100; 
