@@ -1,13 +1,15 @@
 
-import enumAlternatives from "./enumAlternatives";
-import widgets from "./widgets";
-import mostCommon from "./mostCommon";
-import empty from "./empty";
+import enumAlternatives from './enumAlternatives';
+import widgets from './widgets';
+import mostCommon from './mostCommon';
+import empty from './empty';
+import oneOrAnyOf  from './oneOrAnyOf';
 
 export const samples = {
-  "Widgets": widgets,
+  "All Widgets": widgets,
   "Most Common": mostCommon,
   "Enum Alternatives": enumAlternatives,
+  "OneOf or AnyOf": oneOrAnyOf,
   "Clear Schema": empty,
 };
 

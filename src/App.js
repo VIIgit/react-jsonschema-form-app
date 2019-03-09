@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'codemirror/theme/material.css';
+import 'react-toastify/dist/ReactToastify.css';
+import 'rc-switch/assets/index.css';
+import 'codemirror/lib/codemirror.css';
+import './App.css';
 
 import CustomForm from './components/CustomForm';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
 //import Switch from "react-switch";
 import Switch from 'rc-switch';
-import 'rc-switch/assets/index.css';
 
-import 'codemirror/lib/codemirror.css';
 import Editor from './components/Editor';
 
 import JsonSchemaValidator from './components/JsonSchemaValidator';
 import JsonConverter from './components/JsonConverter';
 import YamlConverter from './components/YamlConverter';
 
-import 'codemirror/theme/material.css';
-import './App.css';
+
 
 import CopyLink from './components/CopyLink';
 
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { samples } from "./samples";
 import sampleSimple from './samples/mostCommon';
@@ -262,6 +263,12 @@ class App extends Component {
     if (! toast.isActive(toastId)) {
       toast.error( <div><h3>{err.title}</h3>{err.description}</div>, {
         toastId: toastId
+      });
+    } else {
+      toast.update(toastId, {
+        render: <div><h3>{err.title}</h3>{err.description}</div>,
+        type: toast.TYPE.ERROR,
+        autoClose: 5000
       });
     }
   };
