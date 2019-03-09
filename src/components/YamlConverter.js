@@ -6,18 +6,8 @@ const YamlConverter = {
     return YAML.parse(yaml);
   },
   toString: function(obj) {
+    Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key]);
     return YAML.stringify(obj, null, 2);
-  },
-  convertToString: (potentialYaml) => {
-    var result = {stringified: undefined, errorMsg: undefined};
-    try{
-      YAML.parse(potentialYaml);
-      result.stringified = potentialYaml;
-    } catch (ex){
-      result.errorMsg = ex.message;
-    }
-    
-    return result;
   }
 }
 

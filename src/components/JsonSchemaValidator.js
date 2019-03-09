@@ -11,7 +11,7 @@ class JsonSchemaValidator extends Component {
     super(props);
     this.validationSchema = undefined;
     this.compiledSchema = undefined;
-    this.jsonObj =  undefined;
+    this.error= undefined;
 
     ajv.addFormat("markdown", function(data, cb) {
       return true;
@@ -38,79 +38,55 @@ class JsonSchemaValidator extends Component {
       return !isNaN(data);
     });
     
-    this.compiledSchema = ajv.compile(props.validationSchema);
+    if(props && props.validationSchema){
+      this.compiledSchema = ajv.compile(props.validationSchema);
+    }
 
-    this.state = { 
-        error: undefined
-    };
+    this.updateValidationSchema = this.updateValidationSchema.bind(this);
+    this.getValidationError =  this.getValidationError.bind(this);
   }
 
   updateValidationSchema(validationSchema){
     if (!deepEquals(this.validationSchema, validationSchema)){
       try{
         this.compiledSchema = validationSchema ? ajv.compile(validationSchema) : undefined;
-        this.setState({
-          error: undefined
-        });
+        this.error= undefined;
       } catch(ex){
         this.compiledSchema = undefined;
-        this.setState({
-          error: {
-              title: 'Invalid Schema',
-              description:  ex.message
-          }
-        });
+        this.error= {
+            title: 'Invalid Schema',
+            description:  ex.message
+          };
       }
     }
   }
 
-  setJsonObject(jsonObj){
-    this.jsonObj = jsonObj;
-    return this;
-  }
-  
-  validate(){
-    const compiledSchema  = this.compiledSchema;
-    if (!this.jsonObj){
-      this.setState({ 
-        error: {
-          title: 'Empty',
+  getValidationError(jsonObj){
+    if (!jsonObj){
+      return {
+          title: 'Empty schema',
           description:  ''
-        }
-      });
-      return false;
+        };
     }
-
+    if (this.error){
+      return this.error;
+    }
+    
+    const compiledSchema  = this.compiledSchema;
     if (compiledSchema) {
-      if( !compiledSchema(this.jsonObj)){
+      if( !compiledSchema(jsonObj)){
         var messages = compiledSchema.errors.map(function(item) {
-          return   item['dataPath'] + ' ' + item['message'];
+          return item['dataPath'] + ' ' + item['message'];
         });
-        this.setState({ 
-          error: {
-            title: 'Invalid Data',
-            description:  messages.toString()
-          }
-        });
-        return false;
+        return {
+          title: 'Invalid Data',
+          description:  messages.toString()
+        };
       };
     }
-    this.setState({ 
-      error: undefined
-    });
-    return true;
+    return undefined;
   }
-
-  shouldComponentUpdate(nextProps, nextState){
-    const stateChange =  this.state.error === nextState.error;
-    if (stateChange && this.onChange){
-      this.onChange();
-    }
-    return stateChange;
-  }
-  isValid(){
-    return this.state.error === undefined;
-  }
+  
 }
 
 export default JsonSchemaValidator;

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import YAML from 'yaml';
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
-import { shouldRender, deepEquals } from "react-jsonschema-form/lib/utils";
-
-import AlertMessage from './AlertMessage';
+import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/mode/yaml/yaml';
@@ -46,32 +43,24 @@ const cmOptions = {
     tabSize: 5,
     extraKeys: {
       Tab: function(cm){
-        var spaces = '::';
-        cm.replaceSelection(spaces);
+        cm.replaceSelection('  ');
     }
   }
   };
 class Editor extends Component {
   
   constructor(props) {
-    super(props);
-
-    this.jsonSchemaValidator = props.jsonSchemaValidator;
-    
+    super(props);    
     this.state = { 
-      valid: undefined
+      yaml: props.yaml ? true : false,
+      code: props.codeAsString
     };
-
-    this.onCodeChange = this.onCodeChange.bind(this);
   }
 
   componentWillReceiveProps(props) {
     this.setState({ 
-      valid: true, 
       yaml: props.yaml ? true : false,
-      converter: props.converter,
-      codeObject: props.codeObject,
-      code: props.converter.toString(props.codeObject)
+      code: props.codeAsString
     });
   }
 
@@ -79,110 +68,37 @@ class Editor extends Component {
     return shouldRender(this, nextProps, nextState);
   }
 
-    onCodeChange = (editor, metadata, code) => {
-     
-      const { onChange } = this.props;
-      
-        try {
-          var jsonObj = this.state.converter.toObject(code);
-          var valid = this.jsonSchemaValidator.setJsonObject(jsonObj).validate();
-          if (valid ) {
-            this.setState({ valid: true,
-              errorTitle: undefined,
-              errorDescription: undefined,
-              codeObject: jsonObj
-              });
-
-            if (onChange){
-              onChange(jsonObj);
-            }
-          } 
-        } catch (err) {
-          if (err instanceof SyntaxError) {
-            this.setState({ 
-                valid: false, 
-                errorTitle: 'Invalid Json ',
-                errorDescription: err.message
-              });
-                  
-          } else {
-            this.setState({ valid: false,
-                errorTitle: 'Error',
-                errorDescription: err.message
-              });
-            console.log(err.stack);
-          }
-        }
-    };
-
-    render() {
-      const {
-        code,
-        valid,
-        errorTitle,
-        errorDescription
-      } = this.state;
-
-      return (
-        <div className="">
-          <CodeMirror
-            value={code}
-            onChange={this.onCodeChange}
-            editorDidMount={(editor) => {
+  render() {
+    const {
+      code
+    } = this.state;
+    const {
+      onSchemaChange,
+      yaml
+    } = this.props;
+    const editorOptions = yaml ? yamlCmOptions : cmOptions;
+    return (
+      <div className="">
+        <CodeMirror
+          value={code}
+          onChange={onSchemaChange}
+          editorDidMount={(editor) => {
+            editor.refresh();
+            setTimeout(function () {
               editor.refresh();
-            }}
-            onBeforeChange={(editor, data, value) => {
-                if (data.origin == 'pasteXXXXXXXXXX') {
-
-                  if (data.text.length > 1 ){
-                    const result = this.state.converter.convertToString(data.text.join('\n'));
-
-                    if (result.stringified && !result.errorMsg){
-
-                      if (!(data.from.line == 0 && data.from.ch == 0)){
-                        // remove object's brackets
-                        result.stringified = result.stringified.substring(1, result.stringified.length-1)+ ',';
-                      }
-
-                      alert("Converted to:\n" + result.stringified);
-
-                      editor.refresh();
-                      // my first idea was
-                      // note: for multiline strings may need more complex calculations
-                      editor.replaceRange(result.stringified, data.from, data.to);
-                      // first solution did'nt work (before i guess to call refresh) so i tried that way, works too
-                      /* cm.execCommand('undo');
-                      cm.setCursor(event.from);
-                      cm.replaceSelection(new_text); */
-
-                    } else {
-                      this.setState({code: value});
-                    }
-                    editor.setCursor(data.to);
-                  } else {
-                    editor.replaceRange(data.text, data.from, data.to);
-                    editor.setCursor(data.to);
-                  }
-  
-                } else {
-
-                  //editor.replaceRange(data.text, data.from, data.to);
-                  //editor.setCursor(data.to);                  
-                  this.setState({code: value});
-                }
-
-            }}
-            options={Object.assign({}, this.yaml ? yamlCmOptions : cmOptions)}
-
-          />
-          <AlertMessage 
-            show={!valid} 
-            title={errorTitle} 
-            description={errorDescription}
-          />
-        </div>
-      );
-    }
+            }, 3);
+          }}
+          onBeforeChange={(editor, data, value) => {
+            //editor.replaceRange(data.text, data.from, data.to);
+            //editor.setCursor(data.to);                  
+            this.setState({code: value});
+            
+          }}
+          options={editorOptions}
+        />
+      </div>
+    );
   }
+}
 
-  export default Editor;
+export default Editor;

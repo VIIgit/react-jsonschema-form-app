@@ -18,7 +18,10 @@ import YamlConverter from './components/YamlConverter';
 import 'codemirror/theme/material.css';
 import './App.css';
 
-import CopyLink from './components/CopyLink'
+import CopyLink from './components/CopyLink';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { samples } from "./samples";
 import sampleSimple from './samples/mostCommon';
@@ -34,19 +37,19 @@ const draft07Schema = require('ajv/lib/refs/json-schema-draft-07.json');
 class Selector extends Component {
   constructor(props) {
     super(props);
-    this.state = { current: "Simple" };
+    this.state = { current: 'Simple' };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onLabelClick = label => {
+  onLabelClick = (label) => {
     return event => {
       event.preventDefault();
       this.setState({ current: label });
       this.props.onSelected(samples[label]);
-    };
+    }
   };
 
   render() {
@@ -70,63 +73,130 @@ class Selector extends Component {
     );
   }
 }
-
 class App extends Component {
 
   constructor(props) {
     super(props);
-    
-    const { schema, formData } = sampleSimple;
-
     this.state = {
-      schema: schema,
-      formData : formData,
+      schema: {},
+      formData : {},
+      formDataError: undefined,
       valid: true,
       validate: true,
       liveSettings: {
         validate: true,
         disable: false,
       },
+      isSchemaValid: false,
+      isFormDataValid: false,
       shareURL: null,
-      schemaAsJson: true
+      schemaAsJson: true,
+      schemaError: undefined
     };
 
-    this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema, jsonObj: schema});
-    this.dataValidator = new JsonSchemaValidator({validationSchema: schema, jsonObj: formData});
+    this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema});
+    this.dataValidator = new JsonSchemaValidator();
+
+    this.onSchemaEdited = this.onSchemaEdited.bind(this);
+    this.onFormDataEdited = this.onFormDataEdited.bind(this);
+    this.onUIFormEdited = this.onUIFormEdited.bind(this);
+    this.onFormatChange = this.onFormatChange.bind(this);
+    this.updateSchemaObject = this.updateSchemaObject.bind(this);
+    this.load = this.load.bind(this);
   }
   
   shouldComponentUpdate(nextProps, nextState) {
     return shouldRender(this, nextProps, nextState);
   }
 
-  onSchemaEdited = schema => {
-    try{
+  updateSchemaObject = (schemaObj) => {
+    var error = undefined;
+    var dataError =  undefined;
+    try {
+      error = this.schemaValidator.getValidationError(schemaObj);
+      if ( !error ) { 
+        this.dataValidator.updateValidationSchema(schemaObj);
+        dataError = this.dataValidator.getValidationError(this.state.formData);
+      }
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        error = {
+          title: 'Invalid Json ',
+          description: err.message
+        };
+      } else {
+        error = {
+          title: 'Error',
+          description: err.message
+        };
+        console.log(err.stack);
+      }
+    }
+    this.setState({ 
+      schema: schemaObj,
+      schemaError: error,
+      formDataError: dataError,
+    });
+  }
 
-      this.schemaValidator.setJsonObject(schema).validate();
-
+  onSchemaEdited = (editor, metadata, schema) => {
+    this.state.schemaAsString= schema;
+    try {
+      const converter = this.state.schemaAsJson ? JsonConverter : YamlConverter;
+      var jsonObj = converter.toObject(schema);
+      this.updateSchemaObject(jsonObj);
+    } catch (err) {
       this.setState({ 
-        schema: schema ? schema : {}, 
-        shareURL: null,
-        valid: false
-       });
-    } catch(err) {
-      this.setState({ 
-        shareURL: null,
-        valid: false
-       });
-       alert('Error: \n' + err.message);
+        schemaError: {
+          title: 'Error',
+          description: err.message
+        }
+      });
     }
   };
   
-  onFormDataEdited = value => {
-    this.setState({ formData: value, shareURL: null });
-    console.log('formData changedx: ' +   JSON.stringify (value) );
-  };
+  onFormDataEdited = (editor, metadata, formDataAsString) => {
 
+    const converter = this.state.schemaAsJson ? JsonConverter : YamlConverter;
+    var dataError = undefined;
+
+    try { 
+    
+      var formData = converter.toObject(formDataAsString);
+      dataError = this.dataValidator.getValidationError(formData);
+      
+    } catch (err) {
+      dataError = {
+        title: 'Error',
+        description: err.message
+      };
+    }
+
+    this.setState({ 
+      formDataError: dataError,
+      formData: formData,
+      formDataAsString: formDataAsString
+    });
+  };
+  
   onUIFormEdited = formModel => {
-   this.setState({ 
-     formData: formModel.formData,
-     valid: (formModel.errors.length === 0)
+    const converter = this.state.schemaAsJson ? JsonConverter : YamlConverter;
+    var dataError = undefined;
+    var formDataAsString = ' ';
+    try { 
+      formDataAsString = converter.toString(formModel.formData);
+      dataError = this.dataValidator.getValidationError(formModel.formData);
+      
+    } catch (err) {
+      dataError = {
+        title: 'Error',
+        description: err.message
+      };
+    }
+    this.setState({ 
+      formDataError: dataError,
+      formData: formModel.formData,
+      formDataAsString: formDataAsString
     });
   };
 
@@ -145,16 +215,18 @@ class App extends Component {
 
   
   load = data => {
-    // force resetting form component instance
     
-    this.setState({ form: true }, _ =>
-        this.setState({
-          ...data,
-          schemaAsJson: true,
-          form: false
-        })
-      );
-    };
+    const schemaAsString = JsonConverter.toString(data.schema);
+    const formDataAsString = JsonConverter.toString(data.formData);
+    
+    this.setState({
+      ...data,
+      schemaAsJson: true,
+      schemaAsString: schemaAsString,
+      formDataAsString: formDataAsString,
+      form: false
+    })
+  };
     
   componentDidMount() {
 
@@ -170,34 +242,54 @@ class App extends Component {
     }
   };
 
-  setEditorMode = isSchemaAsJson => {
-    return event => {
-      event.preventDefault();
-      this.setState({ schemaAsJson: isSchemaAsJson });
-      //setImmediate(() => this.props.onSelected(samples[label]));
-    };
-  };
+  onFormatChange = (value, event) => {
+    event.preventDefault();
 
-  onChange = (value, event) => {
-    console.log(`switch checked: ${value}`, event); // eslint-disable-line
-    
-      event.preventDefault();
-      this.setState({ schemaAsJson: value });
-      //setImmediate(() => this.props.onSelected(samples[label]));
+    const converter = value ? JsonConverter : YamlConverter;
+    const schemaAsString = converter.toString(this.state.schema);
+    const formDataAsString = converter.toString(this.state.formData);
+
+    this.setState({ 
+      schemaAsJson: value,
+      schemaAsString: schemaAsString,
+      formDataAsString: formDataAsString
+    });    
     
   }
+  
+  notifyError = (err) => {
+    const toastId = err.title + err.description;
+    if (! toast.isActive(toastId)) {
+      toast.error( <div><h3>{err.title}</h3>{err.description}</div>, {
+        toastId: toastId
+      });
+    }
+  };
 
   render() {
     const {
       schema,
       formData,
       liveSettings,
-      valid,
-      schemaAsJson
+      schemaAsJson,
+      schemaAsString,
+      schemaError,
+      formDataAsString,
+      formDataError,
+      
     } = this.state;
-    const isSchemaValid = this.schemaValidator.isValid();
-    const isDataValid = this.dataValidator.isValid();
-  
+
+    if (schemaError) {
+      this.notifyError(schemaError);
+    }
+    if (formDataError) {
+      this.notifyError(formDataError);
+    }
+    if (!schemaError && !formDataError) {
+      toast.dismiss();
+    }
+    
+
     return (
       <div className="App">
 
@@ -209,6 +301,18 @@ class App extends Component {
           <Selector onSelected={this.load} />
         </nav>
 
+        <ToastContainer 
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnVisibilityChange
+          draggable
+          pauseOnHover
+        />
+
         <div className="container-fluid">
           <div className="row">
 
@@ -218,13 +322,13 @@ class App extends Component {
                   <div className="col">
 
                     <div className="panel panel-default">
-                      <div className={`${isSchemaValid ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                      <div className={`${!schemaError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                         <div >
-                          <span className={`rounded-circle unicode_${isSchemaValid ? "ok" : "nok"}`} />
+                          <span className={`rounded-circle unicode_${!schemaError ? "ok" : "nok"}`} />
                             {"JSONSchema"}
                         </div>
                         <Switch
-                          onChange={this.onChange}
+                          onChange={this.onFormatChange}
                           checked={schemaAsJson}
                           checkedChildren="JSON"
                           unCheckedChildren="YAML"
@@ -232,25 +336,21 @@ class App extends Component {
                       </div>
 
                       <Editor
-                        
-                        jsonSchemaValidator={this.schemaValidator} 
-                        converter={schemaAsJson ? JsonConverter : YamlConverter}
-                        codeObject={schema}
-                        onChange={this.onSchemaEdited}
+                        codeAsString={schemaAsString}
+                        onSchemaChange={this.onSchemaEdited}
                         yaml={!schemaAsJson}
                       />
 
                     </div>
-                 
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="col">      
                     <div className="panel panel-default">
-                      <div className={`${isDataValid ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                      <div className={`${!formDataError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                         <div >
-                          <span className={`rounded-circle unicode_${isDataValid ? "ok" : "nok"}`} />
+                          <span className={`rounded-circle unicode_${!formDataError ? "ok" : "nok"}`} />
                             {"Form Data"}
                         </div>
                         
@@ -258,12 +358,9 @@ class App extends Component {
 
                       <Editor
                         className="form-data"
-                        
-                        jsonSchemaValidator={this.dataValidator}  
-                        converter={JsonConverter}
-
-                        codeObject={formData}
-                        onChange={this.onFormDataEdited}
+                        codeAsString={formDataAsString}
+                        onSchemaChange={this.onFormDataEdited}
+                        yaml={!schemaAsJson}
                       />     
                      </div>       
                   </div>
@@ -279,7 +376,7 @@ class App extends Component {
                 liveSettings = {liveSettings}
                 onChange={(e) =>  this.onUIFormEdited(e)}
                 showErrorList={true}
-                valid={valid}
+                valid={!formDataError}
                 >
               
                 <div className="text-right">
