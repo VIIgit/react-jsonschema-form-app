@@ -38,9 +38,10 @@ module.exports = {
       },
       age: {
         type: "integer",
+        title: "Age",
         minimum: 18,
         maximum: 99,
-        title: "Age",
+        default: 18,
       }
     }
   },

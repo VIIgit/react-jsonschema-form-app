@@ -7,11 +7,10 @@ import anyOf  from './anyOf';
 import oneOf  from './oneOf';
 
 export const samples = {
-  "All Widgets": widgets,
   "Most Common": mostCommon,
   "Enum Alternatives": enumAlternatives,
   "OneOf": oneOf,
   "AnyOf": anyOf,
+  "All Widgets": widgets,
   "Clear Schema": empty,
 };
-

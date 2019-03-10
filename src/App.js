@@ -18,14 +18,13 @@ import JsonSchemaValidator from './components/JsonSchemaValidator';
 import JsonConverter from './components/JsonConverter';
 import YamlConverter from './components/YamlConverter';
 
-
-
 import CopyLink from './components/CopyLink';
 
 import { ToastContainer, toast } from 'react-toastify';
 
 import { samples } from "./samples";
 import sampleSimple from './samples/mostCommon';
+import jsf from 'json-schema-faker';
 
 import Logo from './images/w.png';
 
@@ -272,6 +271,13 @@ class App extends Component {
     }
   };
 
+  generateExample = () => {
+    jsf.option({ alwaysFakeOptionals: true, useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
+ 
+    const genData = jsf.generate(this.state.schema);
+    this.onUIFormEdited ({formData: genData}); 
+  };
+
   render() {
     const {
       schema,
@@ -357,7 +363,8 @@ class App extends Component {
                           <span className={`rounded-circle unicode_${!formDataError ? "ok" : "nok"}`} />
                             {"Form Data"}
                         </div>
-                        
+
+                        <button type="button" className="btn btn-light btn-sm" onClick={this.generateExample}>Generate examples</button>
                       </div>
 
                       <Editor

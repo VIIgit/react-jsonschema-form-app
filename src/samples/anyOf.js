@@ -4,9 +4,14 @@ module.exports = {
     title: 'Menue',
     properties: {
       quantity: {
-        type: 'number'
+        type: 'integer',
+        minimum: 1,
+        maximum: 10
       }
     },
+    required: [
+      'quantity'
+    ],
     anyOf: [
       {
         type: 'object',
