@@ -1,52 +1,52 @@
 import React, { Component } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'codemirror/lib/codemirror.css';
+
+import 'codemirror/mode/yaml/yaml';
+import 'codemirror/mode/javascript/javascript';
 
 import {Controlled as CodeMirror} from 'react-codemirror2';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
-import 'codemirror/mode/javascript/javascript';
-import 'codemirror/mode/yaml/yaml';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'codemirror/lib/codemirror.css';
-
 const cmOptions = {
-    mode: {
-      name: 'javascript',
-      json: true,
-      statementIndent: 2,
-    },
-    height: 'auto',
-    lineNumbers: true,
-    lineWrapping: true,
-    readOnly: false,
-    autoRefresh: true,
-    autofocus: false,
-    matchBrackets: true,
-    viewportMargin: Infinity,
-    styleActiveLine: true,
-    tabSize: 2,
-    indentWithTabs: true
-  };
+  mode: {
+    name: 'javascript',
+    json: true,
+    statementIndent: 2,
+  },
+  height: 'auto',
+  lineNumbers: true,
+  lineWrapping: true,
+  readOnly: false,
+  autoRefresh: true,
+  autofocus: false,
+  matchBrackets: true,
+  viewportMargin: Infinity,
+  styleActiveLine: true,
+  tabSize: 2,
+  indentWithTabs: true
+};
 
-  const yamlCmOptions = {
-    mode: 'text/yaml',
-    height: 'auto',
-    lineNumbers: true,
-    lineWrapping: true,
-    readOnly: false,
-    autoRefresh: true,
-    autofocus: true,
-    matchBrackets: true,
-    viewportMargin: Infinity,
-    styleActiveLine: true,
-    indentWithTabs: false,
-    indentUnit: 5,
-    tabSize: 5,
-    extraKeys: {
-      Tab: function(cm){
-        cm.replaceSelection('  ');
+const yamlCmOptions = {
+  mode: 'text/yaml',
+  height: 'auto',
+  lineNumbers: true,
+  lineWrapping: true,
+  readOnly: false,
+  autoRefresh: true,
+  autofocus: true,
+  matchBrackets: true,
+  viewportMargin: Infinity,
+  styleActiveLine: true,
+  indentWithTabs: false,
+  indentUnit: 5,
+  tabSize: 5,
+  extraKeys: {
+    Tab: function(cm){
+      cm.replaceSelection('  ');
     }
   }
-  };
+};
 class Editor extends Component {
   
   constructor(props) {
@@ -88,11 +88,8 @@ class Editor extends Component {
               editor.refresh();
             }, 3);
           }}
-          onBeforeChange={(editor, data, value) => {
-            //editor.replaceRange(data.text, data.from, data.to);
-            //editor.setCursor(data.to);                  
+          onBeforeChange={(editor, data, value) => {             
             this.setState({code: value});
-            
           }}
           options={editorOptions}
         />

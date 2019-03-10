@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "result"
+          ]
+        }
+      ]
+    }
+  }
+}

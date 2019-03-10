@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "Sub": {
+      "type": "object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "State": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "State"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "PostCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "PostCode"
+          ]
+        }
+      ]
+    }
+  }
+}

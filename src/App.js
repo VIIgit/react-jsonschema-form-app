@@ -255,11 +255,10 @@ class App extends Component {
       schemaAsString: schemaAsString,
       formDataAsString: formDataAsString
     });    
-    
   }
   
   notifyError = (err) => {
-    const toastId = err.title + err.description;
+    const toastId = err.title;
     if (! toast.isActive(toastId)) {
       toast.error( <div><h3>{err.title}</h3>{err.description}</div>, {
         toastId: toastId
@@ -282,8 +281,7 @@ class App extends Component {
       schemaAsString,
       schemaError,
       formDataAsString,
-      formDataError,
-      
+      formDataError
     } = this.state;
 
     if (schemaError) {
@@ -296,7 +294,6 @@ class App extends Component {
       toast.dismiss();
     }
     
-
     return (
       <div className="App">
 

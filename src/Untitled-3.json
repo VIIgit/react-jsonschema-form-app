@@ -1,0 +1,63 @@
+{
+  "type": "object",
+  "properties": {
+    "response": {
+      "type": "object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "result": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "result"
+          ]
+        }
+      ]
+    },
+    "Sub": {
+      "type": "object",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "State": {
+              "type": "string"
+            },
+            "ZipCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ZipCode",
+            "State"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "County": {
+              "type": "string"
+            },
+            "PostCode": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "PostCode"
+          ]
+        }
+      ]
+    }
+  }
+}
