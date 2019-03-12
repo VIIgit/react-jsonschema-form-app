@@ -286,7 +286,7 @@ div.panel-body fieldset legend {
 }
 
 .bg-light{
-  background-color: #333333!important;
+  background-color: #333333ee!important;
   background-color: var(--theme-darkgrey-color);
   margin-bottom: 10px;
 }
@@ -298,6 +298,23 @@ a.navbar-brand img {
   margin-right: 10px;
 }
 
+.navbar-button {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+}
+.navbar {
+  position: fixed;
+  top: 0; 
+  width: 100%; 
+  z-index: 10000;
+  height: 55px;
+}
+
+.main-content {
+  margin-top: 70px;
+}
+
 .left-nav {
   padding: 0px;
 }
@@ -306,10 +323,8 @@ a.navbar-brand img {
   height: 300px;
 }
 .dropdown-menu {
-  z-index: 10000;
+  z-index: 9000;
 }
-
-
 
 .rc-switch-checked::after{
   left: 42px;

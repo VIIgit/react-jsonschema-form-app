@@ -5,11 +5,13 @@ import mostCommon from './mostCommon';
 import empty from './empty';
 import anyOf  from './anyOf';
 import oneOf  from './oneOf';
+import oneOfFaulty from './oneOfFaulty';
 
 export const samples = {
   "Most Common": mostCommon,
   "Enum Alternatives": enumAlternatives,
   "OneOf": oneOf,
+  "OneOf (Faulty)": oneOfFaulty,
   "AnyOf": anyOf,
   "All Widgets": widgets,
   "Clear Schema": empty,

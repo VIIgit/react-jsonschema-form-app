@@ -61,6 +61,7 @@ module.exports = {
               {
                 type: 'object',
                 title: 'Extra Eiscreme',
+                required: ['option', 'flavours'],
                 properties: {
                   option: {
                     const: 'A'
@@ -69,6 +70,7 @@ module.exports = {
                     type: 'array',
                     title: 'flavours',
                     uniqueItems: true,
+                    minItems: 1,
                     items: {
                       type: 'string',
                       oneOf : [
@@ -84,12 +86,16 @@ module.exports = {
                         }
                       ],
                       default : 'CHOCOLATE'
-                    }
+                    },
+                    default : [
+                      "CHOCOLATE"
+                    ]
                   }        
                 }
               },{
                 type: 'object',
                 title: 'Extra',
+                required: ['option'],
                 properties: {
                   option: {
                     const: 'B'

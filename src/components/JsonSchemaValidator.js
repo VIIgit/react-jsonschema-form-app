@@ -79,7 +79,7 @@ class JsonSchemaValidator extends Component {
           return item['dataPath'] + ' ' + item['message'];
         });
         return {
-          title: 'Invalid Data',
+          title: 'Invalid Form Data',
           description:  messages.toString()
         };
       };

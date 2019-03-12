@@ -14,10 +14,10 @@ module.exports = {
           {
             type: 'object',
             title: 'Delivery Express',
-            required: ['company'],
             properties: {
               company: {
-                const: 'DEx'
+                const: 'DEx',
+                default: 'DEx'
               },
               shipping: {
                 type: 'string',
@@ -35,10 +35,10 @@ module.exports = {
           {
             type: "object",
             title: 'Parcel Quick',
-            required: ['company'],
             properties: {
               company: {
-                const: 'PQ'
+                const: 'PQ',
+                default: 'PQ'
               },
               remarks: {
                 type: 'string'
@@ -80,8 +80,7 @@ module.exports = {
           "postCode"
         ]
       }
-    ]
-    
+    ]    
   },
   uiSchema: {
 

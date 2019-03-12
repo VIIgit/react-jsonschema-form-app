@@ -54,7 +54,7 @@ class Selector extends Component {
 
   render() {
     return (
-      <div className="btn-group">
+      <div className="btn-group navbar-button">
         <button className="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           JSON schema examples
         </button>
@@ -81,6 +81,7 @@ class App extends Component {
       schema: {},
       formData : {},
       formDataError: undefined,
+      formDataSyntaxError : undefined,
       valid: true,
       validate: true,
       liveSettings: {
@@ -121,12 +122,12 @@ class App extends Component {
     } catch (err) {
       if (err instanceof SyntaxError) {
         error = {
-          title: 'Invalid Json ',
+          title: 'JSONSchema Invalid Json',
           description: err.message
         };
       } else {
         error = {
-          title: 'Error',
+          title: 'JSONSchema Error',
           description: err.message
         };
         console.log(err.stack);
@@ -148,7 +149,7 @@ class App extends Component {
     } catch (err) {
       this.setState({ 
         schemaError: {
-          title: 'Error',
+          title: 'JSONSchema Error',
           description: err.message
         }
       });
@@ -159,45 +160,58 @@ class App extends Component {
 
     const converter = this.state.schemaAsJson ? JsonConverter : YamlConverter;
     var dataError = undefined;
-
+    var formData = undefined;
     try { 
     
-      var formData = converter.toObject(formDataAsString);
-      dataError = this.dataValidator.getValidationError(formData);
-      
+      this.setState({ 
+        formDataAsString: formDataAsString,
+      });
+      formData = converter.toObject(formDataAsString);
+      this.onUIFormEdited ({formData: formData, formDataAsString: formDataAsString}); 
+      this.setState({ 
+        formDataSyntaxError: undefined
+      });
     } catch (err) {
       dataError = {
-        title: 'Error',
+        title: 'Form Data Error',
         description: err.message
       };
+      this.setState({ 
+        formDataSyntaxError: dataError
+      });
     }
 
-    this.setState({ 
-      formDataError: dataError,
-      formData: formData,
-      formDataAsString: formDataAsString
-    });
+    
   };
   
   onUIFormEdited = formModel => {
     const converter = this.state.schemaAsJson ? JsonConverter : YamlConverter;
     var dataError = undefined;
-    var formDataAsString = ' ';
+    var formDataAsString = undefined;
     try { 
-      formDataAsString = converter.toString(formModel.formData);
       dataError = this.dataValidator.getValidationError(formModel.formData);
-      
+      this.setState({ 
+        formDataError: dataError,
+        formData: formModel.formData
+      });
+      if (formModel.formDataAsString){
+        formDataAsString = formDataAsString;
+      } else if (!this.state.formDataSyntaxError){
+        formDataAsString = converter.toString(formModel.formData);
+        this.setState({ 
+          formDataAsString: formDataAsString
+        });
+      }
     } catch (err) {
       dataError = {
-        title: 'Error',
+        title: 'Error Form Data',
         description: err.message
       };
+      this.setState({ 
+        formDataError: dataError,
+        formData: formModel.formData
+      });
     }
-    this.setState({ 
-      formDataError: dataError,
-      formData: formModel.formData,
-      formDataAsString: formDataAsString
-    });
   };
 
   onShare = () => {
@@ -224,6 +238,7 @@ class App extends Component {
       schemaAsJson: true,
       schemaAsString: schemaAsString,
       formDataAsString: formDataAsString,
+      formDataSyntaxError : undefined,
       form: false
     })
   };
@@ -287,16 +302,22 @@ class App extends Component {
       schemaAsString,
       schemaError,
       formDataAsString,
-      formDataError
+      formDataError,
+      formDataSyntaxError
     } = this.state;
 
-    if (schemaError) {
-      this.notifyError(schemaError);
-    }
-    if (formDataError) {
-      this.notifyError(formDataError);
-    }
-    if (!schemaError && !formDataError) {
+ 
+    if (schemaError || formDataError || formDataSyntaxError) {
+      if (schemaError) {
+        this.notifyError(schemaError);
+      }
+      if (formDataError) {
+        this.notifyError(formDataError);
+      }
+      if (formDataSyntaxError) {
+        this.notifyError(formDataSyntaxError);
+      }
+    } else {
       toast.dismiss();
     }
     
@@ -323,7 +344,7 @@ class App extends Component {
           pauseOnHover
         />
 
-        <div className="container-fluid">
+        <div className="container-fluid main-content">
           <div className="row">
 
             <div className="col-sm-7 left-nav">
@@ -358,9 +379,9 @@ class App extends Component {
                 <div className="row">
                   <div className="col">      
                     <div className="panel panel-default">
-                      <div className={`${!formDataError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                      <div className={`${formDataError || formDataSyntaxError ? "invalid" : "valid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                         <div >
-                          <span className={`rounded-circle unicode_${!formDataError ? "ok" : "nok"}`} />
+                          <span className={`rounded-circle unicode_${formDataError || formDataSyntaxError ? "nok" : "ok"}`} />
                             {"Form Data"}
                         </div>
 
