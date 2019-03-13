@@ -348,9 +348,8 @@ a.navbar-brand img {
   color: #b3b3b0;
 }
 
-
 @media only screen and (min-width: 600px) {
-  .Toastify__toast-container{
+  .Toastify__toast-container {
     width: 400px;
     margin-left: -100px;
   }
@@ -358,7 +357,11 @@ a.navbar-brand img {
 
 @media only screen and (min-width: 768px) {
   .Toastify__toast-container{
-    width: 560px;
-    margin-left: -230px;
+    width: 590px;
+    margin-left: -295px;
   }
+}
+
+.Toastify__toast-container {
+  z-index: 20010;
 }

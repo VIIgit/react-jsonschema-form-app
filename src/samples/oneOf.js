@@ -2,6 +2,7 @@ module.exports = {
   schema: {
     type: 'object',
     title: 'Delivery Address',
+    describtion: 'OneOf',
     properties: {
       address: {
         type: 'string'
