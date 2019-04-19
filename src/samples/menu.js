@@ -5,9 +5,18 @@ module.exports = {
     type: 'object',
     title: 'Menue',
     descibtion: 'AnyOf',
+    required: [
+      'dishes'
+    ],
     properties: {
       dishes: {
         type: 'array',
+        default: {
+          quantity: 1,
+          type: 'STARTTER',
+          name: 'Salat',
+          remark: 'French Dressing'
+        },
         items: {
           type: 'object',
           title: 'Dish',
@@ -24,8 +33,11 @@ module.exports = {
           anyOf: [
             {
               type: 'object',
-              title: 'Entree',
+              title: 'Starter',
               properties: {
+                type: {
+                  const: 'STARTTER'
+                },
                 name: {
                   type: 'string',
                   default: 'Salat'
@@ -36,13 +48,16 @@ module.exports = {
                 }
               },
               required: [
-                'name'
+                'name', 'type'
               ]
             },
             {
               type: 'object',
               title: 'Main',
               properties: {
+                type: {
+                  const: 'MAIN'
+                },
                 dish: {
                   type: 'string',
                   default: 'T-bone 500g'
@@ -53,13 +68,16 @@ module.exports = {
                 }
               },
               required: [
-                'dish'
+                'dish', 'type'
               ]
             },
             {
               type: 'object',
               title: 'Dessert',
               properties: {
+                type: {
+                  const: 'DESSERT'
+                },
                 dessertCoupe: {
                   type: 'string'
                 },
@@ -119,7 +137,8 @@ module.exports = {
                 }
               },
               required: [
-                'dessertCoupe'
+                'dessertCoupe', 
+                'type'
               ]
             }
           ] 
