@@ -152,16 +152,19 @@ module.exports = {
   formData: {
     dishes : [
       {
+        type: 'STARTTER',
         quantity: 1,
         name: 'Salat',
         remark: 'French Dressing'
       },
       {
+        type: 'MAIN',
         quantity: 1,
         dish: 'T-bone 500g',
         remark: 'Medium'
       },
       {
+	      type: 'DESSERT',
         quantity: 1,
         extra : {
           option: 'A',
