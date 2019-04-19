@@ -129,6 +129,7 @@ module.exports = {
   },
   formData: {
     quantity: 1,
+    type: 'DESSERT',
     extra : {
       option: 'A',
       flavours: [
