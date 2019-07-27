@@ -11,12 +11,6 @@ module.exports = {
     properties: {
       dishes: {
         type: 'array',
-        default: {
-          quantity: 1,
-          type: 'STARTTER',
-          name: 'Salat',
-          remark: 'French Dressing'
-        },
         items: {
           type: 'object',
           title: 'Dish',

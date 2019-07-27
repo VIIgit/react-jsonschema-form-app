@@ -314,9 +314,19 @@ class App extends Component {
   generateExample = () => {
     jsf.option({ alwaysFakeOptionals: true, useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
  
-    const genData = jsf.generate(this.state.schema);
-    this.onUIFormEdited ({formData: genData}); 
+    try {
+      const genData = jsf.generate(this.state.schema);
+      this.onUIFormEdited ({formData: genData}); 
+    } catch (err) {
+      this.setState({ 
+        formDataError: {
+          title: 'JSONForm Data Generation',
+          description: err.message
+        }
+      });
+    }
   };
+  
   /*
   shouldComponentUpdate = (nextProps, nextState) =>{
     
