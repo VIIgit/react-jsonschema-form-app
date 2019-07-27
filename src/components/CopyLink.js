@@ -3,16 +3,24 @@ import { Button } from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 class CopyLink extends Component {
+
     onCopyClick = event => {
       this.input.select();
       document.execCommand("copy");
+      const { onShare } = this.props;
+      onShare(true);
     };
   
+    onShareClick = event => {
+      const { onShare } = this.props;
+      onShare(false);
+    };
+
     render() {
       const { shareURL, onShare } = this.props;
       if (!shareURL) {
         return (
-          <Button className="btn btn-dark" type="button" onClick={onShare}>
+          <Button className="btn btn-dark" type="button" onClick={this.onShareClick}>
             Share
           </Button>
         );
@@ -27,9 +35,10 @@ class CopyLink extends Component {
           />
           <span className="input-group-btn">
             <Button
-              className="btn btn-default"
+              className="btn btn-dark"
               type="button"
               onClick={this.onCopyClick}>
+              Copy
             </Button>
           </span>
         </div>

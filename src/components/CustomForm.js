@@ -170,12 +170,14 @@ const UnsupportedWidget = function(props) {
 };
 const customWidgets = {
   markdown: MarkdownWidget,
+  "text/markdown": MarkdownWidget,
   "text/plain": TextareaWidget,
   decimal: DecimalFormatWidget,
   percentage: PercentageFormatWidget,
   UnsupportedWidget: UnsupportedWidget,
   "data-url": FilePreviewWidget,
-  "int64": DecimalFormatWidget
+  "int64": DecimalFormatWidget,
+  "int32": DecimalFormatWidget
 };
 
 function CustomForm(props) {

@@ -1,3 +1,6 @@
+body{
+  line-height: 1.2;
+}
 :root {
   --theme-primary-color: blue;
   --theme-darkgrey-color: rgb(51, 51, 51);
@@ -364,4 +367,11 @@ a.navbar-brand img {
 
 .Toastify__toast-container {
   z-index: 20010;
+  font-size: 0.8em;
+}
+.Toastify__toast--success {
+  background-color: #03A678;
+}
+.Toastify__toast--error {
+  background-color: #EF4836;
 }

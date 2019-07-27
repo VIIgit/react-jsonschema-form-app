@@ -13,6 +13,9 @@ class JsonSchemaValidator extends Component {
     this.compiledSchema = undefined;
     this.error= undefined;
 
+    ajv.addFormat("text/markdown", function(data, cb) {
+      return true;
+    });
     ajv.addFormat("markdown", function(data, cb) {
       return true;
     });

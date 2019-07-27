@@ -97,7 +97,7 @@ class App extends Component {
 
     this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema});
     this.dataValidator = new JsonSchemaValidator();
-
+    this.onShare = this.onShare.bind(this);
     this.onSchemaEdited = this.onSchemaEdited.bind(this);
     this.onFormDataEdited = this.onFormDataEdited.bind(this);
     this.onUIFormEdited = this.onUIFormEdited.bind(this);
@@ -214,7 +214,17 @@ class App extends Component {
     }
   };
 
-  onShare = () => {
+  onShare = (copied) => {
+    if(copied){
+      this.setState({ shareURL: null });
+      this.notifySuccess(
+        {
+          title: 'Copied',
+          description: 'Link copied to clipboard'
+        }
+      );
+      return;
+    }
     const { formData, schema } = this.state;
     const {
       location: { origin, pathname },
@@ -271,28 +281,50 @@ class App extends Component {
     });    
   }
   
-  notifyError = (err) => {
-    const toastId = err.title;
-    if (! toast.isActive(toastId)) {
-      toast.error( <div><h3>{err.title}</h3>{err.description}</div>, {
-        toastId: toastId
+  notifyError = (toastId, err) => {
+    if (!err){
+      toast.dismiss(toastId);
+      return 
+    }
+    if (!toast.isActive(toastId)) {
+      toast.error( <div><h6>{err.title}</h6>{err.description}</div>, {
+        toastId: toastId,
+        autoClose: 4000
       });
     } else {
       toast.update(toastId, {
-        render: <div><h3>{err.title}</h3>{err.description}</div>,
-        type: toast.TYPE.ERROR,
-        autoClose: 5000
+        render: <div><h6>{err.title}</h6>{err.description}</div>
       });
     }
   };
 
+  notifySuccess = (msg) => {
+    const toastId = 'toastIdSuccess' + msg.title;
+    if (!toast.isActive(toastId)) {
+      toast.success( <div><h6>{msg.title}</h6>{msg.description}</div>, {
+        toastId: toastId,
+        autoClose: 2000
+      });
+    } else {
+      toast.update(toastId, {
+        render: <div><h6>{msg.title}</h6>{msg.description}</div>
+      });
+    }
+  };
   generateExample = () => {
     jsf.option({ alwaysFakeOptionals: true, useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
  
     const genData = jsf.generate(this.state.schema);
     this.onUIFormEdited ({formData: genData}); 
   };
+  /*
+  shouldComponentUpdate = (nextProps, nextState) =>{
+    
+    console.log ( 'should: ' +  JSON.stringify(this.state) + '======' + JSON.stringify(nextState))
 
+    return true;
+  };
+  */
   render() {
     const {
       schema,
@@ -307,19 +339,10 @@ class App extends Component {
     } = this.state;
 
  
-    if (schemaError || formDataError || formDataSyntaxError) {
-      if (schemaError) {
-        this.notifyError(schemaError);
-      }
-      if (formDataError) {
-        this.notifyError(formDataError);
-      }
-      if (formDataSyntaxError) {
-        this.notifyError(formDataSyntaxError);
-      }
-    } else {
-      toast.dismiss();
-    }
+    this.notifyError('schemaError', schemaError);
+    this.notifyError('formDataError', formDataError);
+    this.notifyError('formDataSyntaxError', formDataSyntaxError);
+  
     
     return (
       <div className="App">
@@ -334,11 +357,11 @@ class App extends Component {
 
         <ToastContainer 
           position="top-center"
-          autoClose={5000}
           hideProgressBar={false}
           newestOnTop
           closeOnClick
           rtl={false}
+          delay={2000}
           pauseOnVisibilityChange
           draggable
           pauseOnHover
