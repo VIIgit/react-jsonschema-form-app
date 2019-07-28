@@ -77,9 +77,13 @@ const DecimalFormatWidget = function(props) {
   let value = 0;
   const displayType = props.schema.readOnly ? 'text' : 'input';
   if(str){
-    const decimalPos = str.lastIndexOf(".");
-    decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
-    value = Number(str);
+    try{
+      const decimalPos = str.lastIndexOf(".");
+      decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
+      value = Number(str);
+    } catch(err){
+      console.log(err.message);
+    }
   }
   return (
     <NumberFormat id={props.id}  className="form-control form-control-decimal" 
@@ -107,9 +111,13 @@ const PercentageFormatWidget = function(props) {
   let value = 0;
   const displayType = props.schema.readOnly ? 'text' : 'input';
   if(str){
-    const decimalPos = str.lastIndexOf(".");
-    decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
-    value = Number(str) * 100;
+    try{
+      const decimalPos = str.lastIndexOf(".");
+      decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
+      value = Number(str) * 100;
+    } catch(err){
+      console.log(err.message);
+    }    
   }
   return (
     <NumberFormat id={props.id}  className="form-control form-control-decimal" 

@@ -312,7 +312,7 @@ class App extends Component {
     }
   };
   generateExample = () => {
-    jsf.option({ alwaysFakeOptionals: true, useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
+    jsf.option({ alwaysFakeOptionals: false, optionalsProbability: 1 ,useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
  
     try {
       const genData = jsf.generate(this.state.schema);

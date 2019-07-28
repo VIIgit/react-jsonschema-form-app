@@ -5,6 +5,7 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/yaml/yaml';
 import 'codemirror/mode/javascript/javascript';
 
+import 'codemirror/keymap/sublime.js';
 import {Controlled as CodeMirror} from 'react-codemirror2';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
@@ -13,6 +14,10 @@ const cmOptions = {
     name: 'javascript',
     json: true,
     statementIndent: 2,
+  },
+  keyMap: 'sublime',
+  extraKeys: {
+    'Tab': 'indentMore'
   },
   height: 'auto',
   lineNumbers: true,
@@ -39,14 +44,10 @@ const yamlCmOptions = {
   viewportMargin: Infinity,
   styleActiveLine: true,
   indentWithTabs: false,
-  indentUnit: 5,
-  tabSize: 5,
-  extraKeys: {
-    Tab: function(cm){
-      cm.replaceSelection('  ');
-    }
-  }
+  indentUnit: 2,
+  tabSize: 2
 };
+
 class Editor extends Component {
   
   constructor(props) {
