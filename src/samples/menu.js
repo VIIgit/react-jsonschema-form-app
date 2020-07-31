@@ -3,7 +3,7 @@ module.exports = {
   schema: {
 
     type: 'object',
-    title: 'Menue',
+    title: "Example - AnyOf with Array: Menu",
     descibtion: 'AnyOf',
     required: [
       'dishes'

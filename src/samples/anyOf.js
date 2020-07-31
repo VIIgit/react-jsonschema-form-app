@@ -1,7 +1,7 @@
 module.exports = {
   schema: {
     type: 'object',
-    title: 'Menue (AnyOf)',
+    title: 'Example - AnyOf',
     properties: {
       quantity: {
         type: 'integer',

@@ -18,7 +18,8 @@ module.exports = {
             required: ['company'],
             properties: {
               company: {
-                const: 'DEx'
+                const: 'DEx',
+                default: 'DEx'
               },
               shipping: {
                 type: 'string',
@@ -39,7 +40,8 @@ module.exports = {
             required: ['company'],
             properties: {
               company: {
-                const: 'PQ'
+                const: 'PQ',
+                default: 'PQ'
               },
               remarks: {
                 type: 'string'

@@ -1,6 +1,6 @@
 module.exports = {
   schema: {
-    title: "A registration form",
+    title: "Example - Most common: A registration form",
     description: "Most common form example.",
     type: "object",
     required: ["firstName", "lastName"],

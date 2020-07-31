@@ -1,6 +1,6 @@
 module.exports = {
   schema: {
-    title: "A registration form",
+    title: "Example - Enum Alternatives: A registration form",
     description: "Enum and Enum alternatives form example.",
     type: "object",
     properties: {

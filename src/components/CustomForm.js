@@ -84,6 +84,7 @@ const DecimalFormatWidget = function(props) {
     } catch(err){
       console.log(err.message);
     }
+    decimalScale = Math.max( Math.min(decimalScale, 100), 0);
   }
   return (
     <NumberFormat id={props.id}  className="form-control form-control-decimal" 
@@ -117,13 +118,14 @@ const PercentageFormatWidget = function(props) {
       value = Number(str) * 100;
     } catch(err){
       console.log(err.message);
-    }    
+    }
+    decimalScale = Math.max( Math.min(decimalScale, 100), 0);
   }
   return (
     <NumberFormat id={props.id}  className="form-control form-control-decimal" 
         value={value}
         displayType={displayType}
-        decimalScale= {decimalScale-2}
+        decimalScale= {decimalScale}
         fixedDecimalScale= {true} 
         thousandSeparator={true} 
         suffix={'%'}

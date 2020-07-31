@@ -118,7 +118,14 @@ class App extends Component {
       if ( !error ) { 
         this.dataValidator.updateValidationSchema(schemaObj);
         dataError = this.dataValidator.getValidationError(this.state.formData);
+
+        this.setState({ 
+          schema: schemaObj,
+          schemaError: error,
+          formDataError: dataError,
+        });
       }
+
     } catch (err) {
       if (err instanceof SyntaxError) {
         error = {
@@ -132,12 +139,11 @@ class App extends Component {
         };
         console.log(err.stack);
       }
+      this.setState({ 
+        schemaError: error,
+        formDataError: dataError,
+      });
     }
-    this.setState({ 
-      schema: schemaObj,
-      schemaError: error,
-      formDataError: dataError,
-    });
   }
 
   onSchemaEdited = (editor, metadata, schema) => {
@@ -181,7 +187,6 @@ class App extends Component {
       });
     }
 
-    
   };
   
   onUIFormEdited = formModel => {
@@ -311,13 +316,38 @@ class App extends Component {
       });
     }
   };
+
+  removeExample = () => {
+    
+    try {
+      this.onUIFormEdited ({formData: {}}); 
+    } catch (err) {
+      console.log('Clear Data failed: ' + err.message);
+      this.setState({ 
+        formDataError: {
+          title: 'Clear Data',
+          description: err.message
+        }
+      });
+    }
+  };
+
   generateExample = () => {
     jsf.option({ alwaysFakeOptionals: false, optionalsProbability: 1 ,useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
- 
+
+
+    jsf.format('date', function (){ 
+      var date = new Date();
+      var days = Math.random() * (252460800000 - -1000) + -1000;
+      date.setTime(date.getTime() - days);
+      return date.toISOString();
+    });
+    
     try {
-      const genData = jsf.generate(this.state.schema);
+      const genData = jsf(this.state.schema);
       this.onUIFormEdited ({formData: genData}); 
     } catch (err) {
+      console.log('JSONForm Data Generation failed: ' + err.message);
       this.setState({ 
         formDataError: {
           title: 'JSONForm Data Generation',
@@ -417,8 +447,9 @@ class App extends Component {
                           <span className={`rounded-circle unicode_${formDataError || formDataSyntaxError ? "nok" : "ok"}`} />
                             {"Form Data"}
                         </div>
-
-                        <button type="button" className="btn btn-light btn-sm" onClick={this.generateExample}>Generate examples</button>
+                        <div>
+                          <a href="#" onClick={this.generateExample}>Generate Example </a> | <a href="#" onClick={this.removeExample}>Remove </a>
+                        </div>
                       </div>
 
                       <Editor
