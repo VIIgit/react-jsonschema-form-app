@@ -4,6 +4,7 @@ module.exports = {
     description: "Most common form example.",
     type: "object",
     required: ["firstName", "lastName"],
+    additionalProperties: false,
     properties: {
       firstName: {
         type: "string",

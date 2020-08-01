@@ -16,7 +16,7 @@ export const samples = {
   "OneOf Faulty": oneOfFaulty,
   "AnyOf": anyOf,
   "AnyOf with Array": menu,
-  "Schema Dependencies": dependencies,
+  "Dependencies": dependencies,
   "All Widgets": widgets,
   "Clear Schema": empty,
 };

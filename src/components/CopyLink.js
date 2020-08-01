@@ -20,13 +20,13 @@ class CopyLink extends Component {
       const { shareURL, onShare } = this.props;
       if (!shareURL) {
         return (
-          <Button className="btn btn-dark" type="button" onClick={this.onShareClick}>
+          <Button className="btn btn-sm btn-outline-light" type="button" onClick={this.onShareClick}>
             Share
           </Button>
         );
       }
       return (
-        <div className="input-group">
+        <div className="input-group" style={{width: "300px"}}>
           <input
             type="text"
             ref={input => (this.input = input)}
@@ -35,7 +35,7 @@ class CopyLink extends Component {
           />
           <span className="input-group-btn">
             <Button
-              className="btn btn-dark"
+              className="btn btn-outline-primary"
               type="button"
               onClick={this.onCopyClick}>
               Copy

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "ajv": "^6.12.3",
+    "better-ajv-errors": "^0.6.7",
     "bootstrap": "^4.5.0",
     "codemirror": "^5.56.0",
     "jquery": "^3.5.1",

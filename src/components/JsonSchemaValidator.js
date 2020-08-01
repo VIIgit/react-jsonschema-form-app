@@ -1,9 +1,11 @@
 import { Component } from 'react';
 import Ajv from 'ajv';
+//import betterAjvErrors from 'better-ajv-errors';
 
 import { deepEquals } from "react-jsonschema-form/lib/utils";
 
-const ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
+// You need to pass `jsonPointers: true` see https://www.npmjs.com/package/better-ajv-errors
+const ajv = new Ajv({ jsonPointers: true, allErrors: true, unknownFormats: false });
 
 class JsonSchemaValidator extends Component {
   
@@ -78,14 +80,14 @@ class JsonSchemaValidator extends Component {
     const compiledSchema  = this.compiledSchema;
     if (compiledSchema) {
       if( !compiledSchema(jsonObj)){
-        var messages = compiledSchema.errors.map(function(item) {
-          return item['dataPath'] + ' ' + item['message'];
-        });
+
+        //const output = betterAjvErrors(compiledSchema, jsonObj, compiledSchema.errors, {format: 'js'});
+        
         return {
           title: 'Invalid Form Data',
-          description:  messages.toString()
+          validationErrors: compiledSchema.errors
         };
-      };
+      }
     }
     return undefined;
   }

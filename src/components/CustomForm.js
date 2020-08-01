@@ -191,35 +191,31 @@ const customWidgets = {
 };
 
 function CustomForm(props) {
-  const { title, children, liveSettings } = props;
+  const { children, liveSettings } = props;
 
   const icon = props.valid ? "ok" : "nok";
   const cls = props.valid ? "valid" : "invalid";
 
-  return <div className="panel panel-default">        
-      <div className={`${cls} panel-heading`}>
-        <span className={`rounded-circle unicode_${icon}`} />
-        {" " + title}
-      </div>
-      <div className="widget" style= {{"padding": "10px"}}>
-        <Form 
-          {...props} 
-          fields={customFields} 
-          widgets={customWidgets}
-          //  ObjectFieldTemplate={CustomObjectFieldTemplate}
-          //FieldTemplate={CustomFieldTemplate} 
-          ErrorList={ErrorListTemplate}
-          showErrorList={false}
-          liveValidate={liveSettings.validate}
-          disabled={liveSettings.disable}
-          transformErrors={(errors)=> transformErrors(errors)}
-        >
-        {children ? (
-            children
-          ) : <span></span>}
-        </Form>
-      </div>
-    </div>;
+  return <div style= {{"padding": "10px"}}>        
+
+    <Form 
+      {...props} 
+      fields={customFields} 
+      widgets={customWidgets}
+      //  ObjectFieldTemplate={CustomObjectFieldTemplate}
+      //FieldTemplate={CustomFieldTemplate} 
+      ErrorList={ErrorListTemplate}
+      showErrorList={false}
+      liveValidate={liveSettings.validate}
+      disabled={liveSettings.disable}
+      transformErrors={(errors)=> transformErrors(errors)}
+    >
+    {children ? (
+        children
+      ) : <span></span>}
+    </Form>
+
+  </div>;
 }
 
 export default CustomForm;

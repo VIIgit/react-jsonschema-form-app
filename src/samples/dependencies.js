@@ -1,6 +1,6 @@
 module.exports = {
     schema: {
-        "title": "Example - Schema dependencies",
+        "title": "Example - Dependencies",
         "type": "object",
         "properties": {
           "simple": {
@@ -80,12 +80,13 @@ module.exports = {
                           "Yes: One"
                         ]
                       },
-                      "How old is your pet?": {
+                      "petAge": {
+                        "title" : "How old is your pet?",
                         "type": "number"
                       }
                     },
                     "required": [
-                      "How old is your pet?"
+                      "petAge"
                     ]
                   },
                   {

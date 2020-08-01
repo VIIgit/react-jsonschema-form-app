@@ -7,6 +7,7 @@ import 'codemirror/lib/codemirror.css';
 import './App.css';
 
 import CustomForm from './components/CustomForm';
+import SchemaValidationException from './components/SchemaValidationException';
 import { shouldRender } from 'react-jsonschema-form/lib/utils';
 
 //import Switch from "react-switch";
@@ -92,7 +93,8 @@ class App extends Component {
       isFormDataValid: false,
       shareURL: null,
       schemaAsJson: true,
-      schemaError: undefined
+      schemaError: undefined,
+      showForm: true
     };
 
     this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema});
@@ -129,12 +131,12 @@ class App extends Component {
     } catch (err) {
       if (err instanceof SyntaxError) {
         error = {
-          title: 'JSONSchema Invalid Json',
+          title: 'JSONSchema - Syntax Error',
           description: err.message
         };
       } else {
         error = {
-          title: 'JSONSchema Error',
+          title: 'JSONSchema - Error',
           description: err.message
         };
         console.log(err.stack);
@@ -155,7 +157,7 @@ class App extends Component {
     } catch (err) {
       this.setState({ 
         schemaError: {
-          title: 'JSONSchema Error',
+          title: 'JSONSchema - Syntax Error',
           description: err.message
         }
       });
@@ -285,7 +287,14 @@ class App extends Component {
       formDataAsString: formDataAsString
     });    
   }
-  
+
+  onShowFormChange = (value, event) => {
+    event.preventDefault();
+    this.setState({ 
+      showForm: value
+    });    
+  }
+
   notifyError = (toastId, err) => {
     if (!err){
       toast.dismiss(toastId);
@@ -375,14 +384,28 @@ class App extends Component {
       schemaError,
       formDataAsString,
       formDataError,
-      formDataSyntaxError
+      formDataSyntaxError,
+      showForm
     } = this.state;
 
  
     this.notifyError('schemaError', schemaError);
-    this.notifyError('formDataError', formDataError);
     this.notifyError('formDataSyntaxError', formDataSyntaxError);
-  
+    
+    let formOrError;
+    if (showForm) {
+      formOrError = 
+          <CustomForm 
+            schema={schema}
+            formData={formData}
+            liveSettings = {liveSettings}
+            onChange={(e) =>  this.onUIFormEdited(e)}
+            showErrorList={true}
+            valid={!formDataError}
+          />;
+    } else {
+      formOrError = <SchemaValidationException formDataError={formDataError}/>;
+    }
     
     return (
       <div className="App">
@@ -392,6 +415,17 @@ class App extends Component {
             <img src={Logo} width="30" height="30" className="d-inline-block align-top" alt="" />
           JSONSchema Form
           </a>
+
+          <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+            
+            <li className="nav-item">
+              <CopyLink
+                  shareURL={this.state.shareURL}
+                  onShare={this.onShare}
+                />
+            </li>
+          </ul>
+
           <Selector onSelected={this.load} />
         </nav>
 
@@ -414,12 +448,12 @@ class App extends Component {
               <div className="container sticky-top"> 
                 <div className="row">
                   <div className="col">
-
+                  
                     <div className="panel panel-default">
-                      <div className={`${!schemaError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                      <div className={`${!schemaError ? "valid" : "fatal"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                         <div >
                           <span className={`rounded-circle unicode_${!schemaError ? "ok" : "nok"}`} />
-                            {"JSONSchema"}
+                            {!schemaError ? " JSONSchema" : " JSONSchema - Syntax Error"}
                         </div>
                         <Switch
                           onChange={this.onFormatChange}
@@ -442,13 +476,13 @@ class App extends Component {
                 <div className="row">
                   <div className="col">      
                     <div className="panel panel-default">
-                      <div className={`${formDataError || formDataSyntaxError ? "invalid" : "valid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                      <div className={`${formDataSyntaxError ? "fatal" : (formDataError ? "invalid" : "valid")} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                         <div >
                           <span className={`rounded-circle unicode_${formDataError || formDataSyntaxError ? "nok" : "ok"}`} />
-                            {"Form Data"}
+                            {formDataSyntaxError ? " Form Data - Syntax Error" : (formDataError ? " Form Data - Validation Error" : " Form Data")}
                         </div>
                         <div>
-                          <a href="#" onClick={this.generateExample}>Generate Example </a> | <a href="#" onClick={this.removeExample}>Remove </a>
+                          <a href="#" onClick={this.generateExample}>Generate Example </a> | <a href="#" onClick={this.removeExample}>Clear </a>
                         </div>
                       </div>
 
@@ -465,25 +499,23 @@ class App extends Component {
             </div>
             
             <div className="col-sm-5">
-              <CustomForm 
-                title="Form"
-                schema={schema}
-                formData={formData}
-                liveSettings = {liveSettings}
-                onChange={(e) =>  this.onUIFormEdited(e)}
-                showErrorList={true}
-                valid={!formDataError}
-                >
-              
-                <div className="text-right">
-                  <CopyLink
-                    shareURL={this.state.shareURL}
-                    onShare={this.onShare}
-                  />
-                </div>
-            
-              </CustomForm>                 
-            
+              <div className="panel panel-default">
+                  <div className={`${!formDataError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
+                    <div >
+                      <span className={`rounded-circle unicode_${!formDataError ? "ok" : "nok"}`} />
+                        {showForm ? " Form" : " Error Details"} {formDataError ? " - Validation Error" : ""}
+                    </div>
+                    <div>
+                    <Switch
+                      onChange={this.onShowFormChange}
+                      checked={showForm}
+                      checkedChildren="Form"  
+                      unCheckedChildren="Details"
+                    />
+                    </div>
+                  </div>
+                  {formOrError}
+              </div>
             </div>
           </div>
         </div>
