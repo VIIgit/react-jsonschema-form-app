@@ -32,17 +32,25 @@ module.exports = {
         default: "male",
         title: "Gender",
       },
-      startMembership: {
-        type: "string",
-        format: "date",
-        title: "Start Membership at",
-      },
       age: {
         type: "integer",
         title: "Age",
         minimum: 18,
         maximum: 99,
         default: 18,
+      },
+      startMembership: {
+        type: "string",
+        format: "date",
+        title: "Start Membership at",
+      },
+      donation: {
+        type: "string",
+        format: "decimal",
+        title: "Donation",
+        'x-multipleOf': "5",
+        'x-minimum': "10",
+        'x-maximum': "500"
       }
     }
   },

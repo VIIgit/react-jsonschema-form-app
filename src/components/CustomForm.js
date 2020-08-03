@@ -74,7 +74,7 @@ function transformErrors(errors) {
 const DecimalFormatWidget = function(props) {
   const str = props.value;
   let decimalScale = 0;
-  let value = 0;
+  let value = "";
   const displayType = props.schema.readOnly ? 'text' : 'input';
   if(str){
     try{
@@ -98,8 +98,7 @@ const DecimalFormatWidget = function(props) {
           let {floatValue} = values;
           // formattedValue = $2,223
           // value ie, 2223
-          floatValue = isNaN(floatValue) ? 0 : floatValue; 
-          const strValue = Number(floatValue).toFixed(decimalScale);
+          const strValue = isNaN(floatValue) ? undefined : Number(floatValue).toFixed(decimalScale);
           props.onChange(strValue);
         }}
        />
@@ -109,13 +108,13 @@ const DecimalFormatWidget = function(props) {
 const PercentageFormatWidget = function(props) {
   const str = props.value;
   let decimalScale = 0;
-  let value = 0;
+  let value = "";
   const displayType = props.schema.readOnly ? 'text' : 'input';
   if(str){
     try{
       const decimalPos = str.lastIndexOf(".");
       decimalScale = (decimalPos >-1 ) ? str.length - decimalPos - 1 : 0;
-      value = Number(str) * 100;
+      value = Number(str);
     } catch(err){
       console.log(err.message);
     }
@@ -133,8 +132,7 @@ const PercentageFormatWidget = function(props) {
           let {floatValue} = values;
           // formattedValue = $2,223
           // value ie, 2223
-          floatValue = isNaN(floatValue) ? 0 : floatValue/100; 
-          const strValue = Number(floatValue).toFixed(decimalScale);
+          const strValue = isNaN(floatValue) ? undefined : Number(floatValue).toFixed(decimalScale);
           props.onChange(strValue);
         }}
        />
@@ -192,9 +190,6 @@ const customWidgets = {
 
 function CustomForm(props) {
   const { children, liveSettings } = props;
-
-  const icon = props.valid ? "ok" : "nok";
-  const cls = props.valid ? "valid" : "invalid";
 
   return <div style= {{"padding": "10px"}}>        
 

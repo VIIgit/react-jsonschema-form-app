@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import Ajv from 'ajv';
-//import betterAjvErrors from 'better-ajv-errors';
+import betterAjvErrors from 'better-ajv-errors';
 
 import { deepEquals } from "react-jsonschema-form/lib/utils";
 
@@ -81,11 +81,11 @@ class JsonSchemaValidator extends Component {
     if (compiledSchema) {
       if( !compiledSchema(jsonObj)){
 
-        //const output = betterAjvErrors(compiledSchema, jsonObj, compiledSchema.errors, {format: 'js'});
-        
+        const output = betterAjvErrors(compiledSchema, jsonObj, compiledSchema.errors, {format: 'cli', indent: 2});
         return {
           title: 'Invalid Form Data',
-          validationErrors: compiledSchema.errors
+          validationErrors: compiledSchema.errors,
+          plainText: output
         };
       }
     }

@@ -64,7 +64,7 @@ class Selector extends Component {
           {Object.keys(samples).map((label, i) => {
             return (
               <a key={i}
-                role="presentation" href="#" className={this.state.current === label ? "active dropdown-item" : "dropdown-item"} onClick={this.onLabelClick(label)} >
+                role="presentation" className={this.state.current === label ? "active dropdown-item" : "dropdown-item"} onClick={this.onLabelClick(label)} >
                 {label}
               </a>
             );
@@ -96,6 +96,43 @@ class App extends Component {
       schemaError: undefined,
       showForm: true
     };
+
+    // move to it's own class
+    jsf.option({ alwaysFakeOptionals: false, optionalsProbability: 1 ,useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
+    jsf.format('date', function (){ 
+      var date = new Date();
+      var days = Math.random() * (252460800000 - -1000) + -1000;
+      date.setTime(date.getTime() - days);
+      return date.toISOString();
+    });
+    jsf.format('decimal', function (attr){ 
+      var max = attr["x-maximum"] ? parseFloat(attr["x-maximum"]) : 100000;
+      var min = attr["x-minimum"] ? parseFloat(attr["x-minimum"]) : -100000;
+
+      var decimal = Math.random() * (max - min) + min;
+
+      var multiple = attr["x-multipleOf"];
+      decimal = multiple ? decimal - (decimal % multiple) : decimal;
+
+      var minFix = Math.ceil(0);
+      var maxFix = Math.floor(3);
+      var fix = Math.floor( Math.random() * (maxFix - minFix)) + minFix;
+      return decimal.toFixed(fix);
+    });
+    jsf.format('percentage', function (attr){ 
+      var max = attr["x-maximum"] ? parseFloat(attr["x-maximum"]) : 120;
+      var min = attr["x-minimum"] ? parseFloat(attr["x-minimum"]) : -120;
+
+      var percentage = Math.random() * (max - min) + min;
+
+      var multiple = attr["x-multipleOf"];
+      percentage = multiple ? percentage - (percentage % multiple) : percentage;
+
+      var minFix = Math.ceil(0);
+      var maxFix = Math.floor(2);
+      var fix = Math.random() * (maxFix - minFix) + minFix;
+      return percentage.toFixed(fix);
+    });
 
     this.schemaValidator = new JsonSchemaValidator({validationSchema: draft07Schema});
     this.dataValidator = new JsonSchemaValidator();
@@ -342,18 +379,9 @@ class App extends Component {
   };
 
   generateExample = () => {
-    jsf.option({ alwaysFakeOptionals: false, optionalsProbability: 1 ,useDefaultValue: true, failOnInvalidTypes: false, failOnInvalidFormat: false });
 
-
-    jsf.format('date', function (){ 
-      var date = new Date();
-      var days = Math.random() * (252460800000 - -1000) + -1000;
-      date.setTime(date.getTime() - days);
-      return date.toISOString();
-    });
-    
     try {
-      const genData = jsf(this.state.schema);
+      const genData = jsf.generate(this.state.schema);
       this.onUIFormEdited ({formData: genData}); 
     } catch (err) {
       console.log('JSONForm Data Generation failed: ' + err.message);
@@ -388,7 +416,6 @@ class App extends Component {
       showForm
     } = this.state;
 
- 
     this.notifyError('schemaError', schemaError);
     this.notifyError('formDataSyntaxError', formDataSyntaxError);
     
@@ -401,7 +428,6 @@ class App extends Component {
             liveSettings = {liveSettings}
             onChange={(e) =>  this.onUIFormEdited(e)}
             showErrorList={true}
-            valid={!formDataError}
           />;
     } else {
       formOrError = <SchemaValidationException formDataError={formDataError}/>;
@@ -503,16 +529,14 @@ class App extends Component {
                   <div className={`${!formDataError ? "valid" : "invalid"} panel-heading btn-toolbar justify-content-between`} role="toolbar" aria-label="Toolbar with button groups">
                     <div >
                       <span className={`rounded-circle unicode_${!formDataError ? "ok" : "nok"}`} />
-                        {showForm ? " Form" : " Error Details"} {formDataError ? " - Validation Error" : ""}
+                        {showForm ? (formDataError ? " Form - Validation Error" : " Form" ) : " Validation Errors"}
                     </div>
-                    <div>
                     <Switch
                       onChange={this.onShowFormChange}
                       checked={showForm}
-                      checkedChildren="Form"  
+                      checkedChildren="Widget"  
                       unCheckedChildren="Details"
                     />
-                    </div>
                   </div>
                   {formOrError}
               </div>

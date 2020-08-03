@@ -4,20 +4,20 @@ import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 class CopyLink extends Component {
 
-    onCopyClick = event => {
+    onCopyClick = () => {
       this.input.select();
       document.execCommand("copy");
       const { onShare } = this.props;
       onShare(true);
     };
   
-    onShareClick = event => {
+    onShareClick = () => {
       const { onShare } = this.props;
       onShare(false);
     };
 
     render() {
-      const { shareURL, onShare } = this.props;
+      const { shareURL } = this.props;
       if (!shareURL) {
         return (
           <Button className="btn btn-sm btn-outline-light" type="button" onClick={this.onShareClick}>
