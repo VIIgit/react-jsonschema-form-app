@@ -11,10 +11,6 @@ import NumberFormat from 'react-number-format'
 
 const ReactMarkdown = require('react-markdown')
 
-const customFields = {
-  StringField: CustomStringField
-};
-
 function ErrorListTemplate(props) {
   const {errors} = props;
   return (
@@ -176,6 +172,16 @@ const UnsupportedWidget = function(props) {
       No default Editor for format <strong>'{props.schema.format}'</strong>
       </div> 
 };
+
+const CustomDescriptionField = ({id, description}) => {
+  return <ReactMarkdown className="descriptionMarkDown" id={id} source={description} />;
+};
+
+const customFields = {
+  StringField: CustomStringField,
+  DescriptionField: CustomDescriptionField
+};
+
 const customWidgets = {
   markdown: MarkdownWidget,
   "text/markdown": MarkdownWidget,
@@ -187,6 +193,7 @@ const customWidgets = {
   "int64": DecimalFormatWidget,
   "int32": DecimalFormatWidget
 };
+
 
 function CustomForm(props) {
   const { children, liveSettings } = props;

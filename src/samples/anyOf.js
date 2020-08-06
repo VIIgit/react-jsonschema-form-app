@@ -18,7 +18,7 @@ module.exports = {
         title: 'Starter',
         properties: {
           type: {
-            const: 'STARTTER'
+            const: 'STARTER'
           },
           name: {
             type: 'string',

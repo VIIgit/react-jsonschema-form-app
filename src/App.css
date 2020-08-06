@@ -191,11 +191,8 @@ body{
 .array-item{
   display: flex;
   flex-wrap: wrap;
-  margin-right: -5px;
-  margin-left: -5px;
   width: 100%;
-  padding: 0 20px;
-  
+  padding: 0px 20px 0px 25px;
 }
 
 .array-item-add{
@@ -241,13 +238,11 @@ div.field-array {
   padding-left: 5px;
 }
 
-
 .form-group{
   x-border-radius: 8px;
   x-border-radius: 8px;
   x-background-color: rgba(57, 57, 57, 0.1);
   x-background-color: rgba(163, 146, 116, 0.2);
-
 
   Golden-wheat: #a39274;
 
@@ -255,11 +250,12 @@ div.field-array {
   
   Deep-gray: #252523;
 
+  margin-bottom: 0.3rem;
 }
 
-.field-string, .field-integer, div.field-array {
+.field-string, .field-integer, .field-number, div.field-array, .field-undefined {
   border-radius: 8px;
-  border: #948c81 2px solid;
+  border: #948c81 1px solid;
 }
 
 .form-control:focus { 
@@ -271,6 +267,7 @@ div.field-array {
 
 .form-control {
   border-width: 0;
+  border-radius: 8px;
 }
 
 .blood-orange-gradient { 
@@ -288,9 +285,7 @@ div.preview-menu ul {
   border-bottom-width: 0;
 
 }
-.form-group { 
 
-}
 div.panel-body fieldset legend {
   height: 3px;
   border-top-color: #747474;
@@ -390,4 +385,20 @@ a.navbar-brand img {
 }
 .Toastify__toast--error {
   background-color: #EF4836;
+}
+
+.descriptionMarkDown{
+  padding-left: 10px;
+  padding-right: 10px;
+  color: darkred;
+  font-size: smaller;
+}
+
+.error-detail {
+  background-color: rgba(255, 0, 0, 0.1);
+  margin-bottom: 0px;
+  padding-left: 20px;
+  list-style-type: "→ ";
+
+  border-radius: 8px;
 }

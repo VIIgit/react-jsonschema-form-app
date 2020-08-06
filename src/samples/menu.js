@@ -146,7 +146,7 @@ module.exports = {
   formData: {
     dishes : [
       {
-        type: 'STARTTER',
+        type: 'STARTER',
         quantity: 1,
         name: 'Salat',
         remark: 'French Dressing'

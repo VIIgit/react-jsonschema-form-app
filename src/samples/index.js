@@ -8,6 +8,7 @@ import oneOf  from './oneOf';
 import oneOfFaulty from './oneOfFaulty';
 import menu from './menu';
 import dependencies from './dependencies';
+import ifThenElse  from './ifThenElse';
 
 export const samples = {
   "Most Common": mostCommon,
@@ -17,6 +18,7 @@ export const samples = {
   "AnyOf": anyOf,
   "AnyOf with Array": menu,
   "Dependencies": dependencies,
+  "If-Then-Else+Depencies": ifThenElse,
   "All Widgets": widgets,
   "Clear Schema": empty,
 };
